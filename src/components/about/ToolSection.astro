@@ -27,14 +27,24 @@ const { class: className, title, tools, ...props } = Astro.props
     {
       tools.map((tool) => (
         <a
-          class='group relative text-sm leading-normal no-underline hover:bg-transparent '
+          class='group relative text-sm leading-normal no-underline hover:bg-transparent'
           href={tool.href}
           id={tool.name}
           target='_blank'
         >
           <div class='relative flex flex-row items-center gap-x-4 px-2 py-1.5 transition-all'>
-            <div class='absolute -inset-0 z-10 rounded-lg border border-border bg-muted opacity-0 transition-all group-hover:opacity-50' />
-            <Icon name={tool.iconPath} class='z-20 h-10 w-10 rounded-lg bg-muted p-2' />
+            <div class='absolute -inset-0 z-10 rounded-lg border border-border opacity-0 transition-all' />
+            
+            {/* Check if the iconPath is an .ico file */}
+            {tool.iconPath.endsWith('.ico') ? (
+              <img
+                class='z-20 h-10 w-10 rounded-lg p-1'
+                src={`/icons/${tool.iconPath}`}
+              />
+            ) : (
+              <Icon name={tool.iconPath} class='z-20 h-10 w-10 rounded-lg p-2' />
+            )}
+
             <div class='z-20 flex flex-col'>
               <div class='font-medium'>{tool.name}</div>
               <div class='font-normal text-muted-foreground'>{tool.description}</div>

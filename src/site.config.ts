@@ -2,13 +2,13 @@ import type { SiteConfig, MenuLinks, SocialLinks } from '@/types'
 
 export const siteConfig: SiteConfig = {
   // Used as both a meta property (src/components/BaseHead.astro L:31 + L:49) & the generated satori png (src/pages/og-image/[slug].png.ts)
-  author: 'CWorld / Arthals',
+  author: 'witchhunted',
   // Meta property used to construct the meta title property, found in src/components/BaseHead.astro L:11
-  title: 'Astro Theme Pure',
+  title: 'witchhunted',
   // Meta property used to generate your sitemap and canonical URLs in your final build
   site: 'https://astro-theme-pure.vercel.app',
   // Meta property used as the default description meta property
-  description: 'Stay hungry, stay foolish',
+  description: 'witchhunted messing with his sh1t',
   // HTML lang property, found in src/layouts/Base.astro L:18
   lang: 'zh-CN, en-US',
   // Meta property, found in src/components/BaseHead.astro L:42
@@ -28,7 +28,7 @@ export const siteConfig: SiteConfig = {
     url: 'https://icp.gov.moe/?keyword=APTX4869',
     text: '萌ICP备APTX4869号'
   },
-  walineServerUrl: 'https://astro-theme-pure-waline.arthals.ink',
+  // walineServerUrl: 'https://astro-theme-pure-waline.arthals.ink',
   applyFriendTip: {
     name: 'Astro Theme Pure',
     slogan: '求知若愚，虚怀若谷',
@@ -54,14 +54,14 @@ export const menuLinks: MenuLinks = [
     link: '/blog',
     label: 'Blog'
   },
-  {
-    link: '/projects',
-    label: 'Projects'
-  },
-  {
-    link: '/links',
-    label: 'Links'
-  },
+  // {
+  //   link: '/projects',
+  //   label: 'Projects'
+  // },
+  // {
+  //   link: '/links',
+  //   label: 'Links'
+  // },
   {
     link: '/about',
     label: 'About'
