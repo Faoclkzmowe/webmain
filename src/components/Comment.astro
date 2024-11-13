@@ -20,24 +20,24 @@ const { class: className } = Astro.props
       super()
     }
 
-    connectedCallback() {
-      init({
-        el: '#waline',
-        serverURL: siteConfig.walineServerUrl,
-        emoji: [
-          'https://cdn.cbd.int/@waline/emojis@1.2.0/bmoji',
-          'https://cdn.cbd.int/@waline/emojis@1.2.0/weibo'
-        ],
-        reaction: ['/images/comment-like.png'],
-        pageview: true,
-        comment: true,
-        locale: {
-          reaction0: 'Like',
-          placeholder: 'Welcome to comment. (Email to receive replies. Login is unnecessary)'
-        },
-        imageUploader: false
-      })
-    }
+    // connectedCallback() {
+    //   init({
+    //     el: '#waline',
+    //     serverURL: siteConfig.walineServerUrl,
+    //     emoji: [
+    //       'https://cdn.cbd.int/@waline/emojis@1.2.0/bmoji',
+    //       'https://cdn.cbd.int/@waline/emojis@1.2.0/weibo'
+    //     ],
+    //     reaction: ['/images/comment-like.png'],
+    //     pageview: true,
+    //     comment: true,
+    //     locale: {
+    //       reaction0: 'Like',
+    //       placeholder: 'Welcome to comment. (Email to receive replies. Login is unnecessary)'
+    //     },
+    //     imageUploader: false
+    //   })
+    // }
   }
 
   customElements.define('comment-component', Comment)
