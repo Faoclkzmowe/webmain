@@ -14,10 +14,10 @@ import { siteConfig } from '@/site-config'
 import { getAllPosts, sortMDByDate } from '@/utils'
 import GithubCard from '@/components/GithubCard.astro'
 
-import avatar from '@/assets/avatar3.png'
+// import avatar from '@/assets/avatar3.png'
 // import avatar from '@/assets/avatar.gif'
 // import avatar from '@/assets/avatar.mp4'
-// const avatar = 'https://i.ibb.co/tMHhqz0/x4MpzLf.gif'; // Use your URL here
+const avatar = 'https://i.ibb.co/tMHhqz0/x4MpzLf.gif'; // Use your URL here
 
 const languages = ['Html', 'JavaScript', 'CSS', 'Shell']
 const frontend = ['TypeScript', 'Vite', 'Webpack', 'Astro']
@@ -72,6 +72,8 @@ const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
         alt="profile"
         class="h-96 w-auto rounded-full border-l-2 border-r-2 border-purple-400 float-avatar"
         loading="eager"
+        width = 10
+        height = 10
       />
 
       <div class='flex flex-col items-center gap-y-4'>
