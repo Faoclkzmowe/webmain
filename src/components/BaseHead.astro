@@ -1,4 +1,5 @@
 ---
+import { ViewTransitions } from 'astro:transitions';
 import SpeedInsights from '@vercel/speed-insights/astro'
 import type { SiteMeta } from '@/types'
 import { siteConfig } from '@/site-config'
@@ -125,3 +126,5 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/social-card2.jpg', A
     </script>
   )
 }
+
+<ViewTransitions />
