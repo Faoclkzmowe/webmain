@@ -8,7 +8,7 @@ export const siteConfig: SiteConfig = {
   // Meta property used to generate your sitemap and canonical URLs in your final build
   site: 'https://astro-theme-pure.vercel.app',
   // Meta property used as the default description meta property
-  description: 'witchhunted messing with his sh1t',
+  description: "witchhunted's website",
   // HTML lang property, found in src/layouts/Base.astro L:18
   lang: 'zh-CN, en-US',
   // Meta property, found in src/components/BaseHead.astro L:42
