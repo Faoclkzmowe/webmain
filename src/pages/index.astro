@@ -14,9 +14,10 @@ import { siteConfig } from '@/site-config'
 import { getAllPosts, sortMDByDate } from '@/utils'
 import GithubCard from '@/components/GithubCard.astro'
 
+import avatar from '@/assets/avatar3.png'
 // import avatar from '@/assets/avatar.gif'
 // import avatar from '@/assets/avatar.mp4'
-const avatar = 'https://i.ibb.co/tMHhqz0/x4MpzLf.gif'; // Use your URL here
+// const avatar = 'https://i.ibb.co/tMHhqz0/x4MpzLf.gif'; // Use your URL here
 
 const languages = ['Html', 'JavaScript', 'CSS', 'Shell']
 const frontend = ['TypeScript', 'Vite', 'Webpack', 'Astro']
@@ -27,16 +28,50 @@ const allPosts = await getAllPosts()
 const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
 ---
 
+<style>
+  @keyframes float {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes borderColorChange {
+    0% {
+      border-left-color: #659EB9;
+      border-right-color: #8E44AD;
+    }
+    50% {
+      border-left-color: #8E44AD;
+      border-right-color: #659EB9;
+    }
+    100% {
+      border-left-color: #659EB9;
+      border-right-color: #8E44AD;
+    }
+  }
+
+  .float-avatar {
+    animation: float 1.5s ease-in-out infinite, borderColorChange 3s linear infinite;
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-style: solid;
+  }
+</style>
+
 <PageLayout meta={{ title: 'Home' }} highlightColor='#659EB966'>
   <div class='flex w-full flex-col gap-y-10 md:w-4/5 lg:w-5/6'>
     <section class='animate flex flex-col items-center gap-y-7'>
       <Image
         src={avatar}
-        alt='profile'
-        class='h-80 w-auto rounded-full border-l-2 border-r-2 border-gray-300'
-        loading='eager'
-        width={640}
-        height={360}
+        alt="profile"
+        class="h-96 w-auto rounded-full border-l-2 border-r-2 border-purple-400 float-avatar"
+        loading="eager"
       />
 
       <div class='flex flex-col items-center gap-y-4'>
