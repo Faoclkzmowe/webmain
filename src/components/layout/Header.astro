@@ -1,5 +1,11 @@
 ---
 import { siteConfig, menuLinks } from '@/site-config'
+declare global {
+  interface Window {
+    audioInstance?: HTMLAudioElement;
+  }
+}
+
 ---
 
 <header-component
@@ -47,19 +53,25 @@ import { siteConfig, menuLinks } from '@/site-config'
             <div class='flex w-full grow flex-row justify-end gap-x-3 sm:w-fit sm:gap-x-5'>
               <!-- <a class='px-1 py-2' href='https://www.travellings.cn/go.html' title='Travelling'>
                 <span class='sr-only'>Travelling</span>
-                <svg class='size-5'>
+                <svg class='size-6'>
                   <use href='/icons/header.svg#mingcute-train-2-line'></use>
                 </svg>
               </a> -->
 
               <a class='px-1 py-2' href='/search' title='Search'>
                 <span class='sr-only'>Search</span>
-                <svg class='size-5'>
+                <svg class='size-6'>
                   <use href='/icons/header.svg#mingcute-search-2-line'></use>
                 </svg>
               </a>
             </div>
-            <!-- <span>Play</span> -->
+            <!-- <span id="playPauseButton">Play</span> -->
+            <a href="#" id="playPauseLink" class="play-pause-link">
+              <svg class="size-6">
+                <use href="/icons/header.svg#play-circle-line"></use>
+              </svg>
+            </a>
+            
           </div>
         </div>
 
@@ -70,10 +82,10 @@ import { siteConfig, menuLinks } from '@/site-config'
             class='group/dark rounded-md border p-1.5 transition-all hover:bg-border sm:group-[.not-top]:rounded-xl'
           >
             <span class='sr-only'>Dark Theme</span>
-            <svg class='size-5 transition-all group-hover/dark:text-primary dark:hidden'>
+            <svg class='size-6 transition-all group-hover/dark:text-primary dark:hidden'>
               <use href='/icons/header.svg#mingcute-sun-line'></use>
             </svg>
-            <svg class='hidden size-5 transition-all group-hover/dark:text-primary dark:block'>
+            <svg class='hidden size-6 transition-all group-hover/dark:text-primary dark:block'>
               <use href='/icons/header.svg#mingcute-moon-stars-line'></use>
             </svg>
           </button>
@@ -82,7 +94,7 @@ import { siteConfig, menuLinks } from '@/site-config'
             class='rounded-md border p-1.5 transition-all hover:bg-border sm:hidden sm:group-[.not-top]:rounded-xl'
           >
             <span class='sr-only'>Menu</span>
-            <svg class='size-5'>
+            <svg class='size-6'>
               <use href='/icons/header.svg#mingcute-menu-line'></use>
             </svg>
           </button>
@@ -94,41 +106,90 @@ import { siteConfig, menuLinks } from '@/site-config'
 
 <script>
   class Header extends HTMLElement {
+    private audio: HTMLAudioElement;
+
     constructor() {
-      super()
+      super();
+
+      // Check if audio instance already exists and use it; otherwise, create a new one
+      if (!window.audioInstance) {
+        window.audioInstance = new Audio('public/audio/songu.mp3');
+        window.audioInstance.volume = 0.1;
+        window.audioInstance.loop = false; // Disable looping
+
+        // Add an event listener for the 'ended' event to reset play state and icon when audio finishes
+        window.audioInstance.addEventListener('ended', () => {
+          const playPauseLink = document.querySelector('#playPauseLink');
+          if (playPauseLink) {
+            playPauseLink.innerHTML = '<svg class="size-6"><use href="/icons/header.svg#play-circle-line"></use></svg>'; // Reset to play icon
+          }
+          sessionStorage.setItem('isPlaying', 'false'); // Reset play state in sessionStorage
+        });
+      }
+
+      // Set the audio element to the global instance
+      this.audio = window.audioInstance;
+
+      // Play the audio if sessionStorage indicates it should be playing
+      if (sessionStorage.getItem('isPlaying') === 'true' && this.audio.paused) {
+        this.audio.play();
+      }
     }
 
     connectedCallback() {
-      // Header
-      let preScrollY = window.scrollY
-      this.classList.toggle('not-top', preScrollY > 20)
+      let preScrollY = window.scrollY;
+      this.classList.toggle('not-top', preScrollY > 20);
 
       window.addEventListener('scroll', () => {
-        this.classList.toggle('not-top', window.scrollY > 20)
-        this.dataset.show = (window.scrollY < 350 || window.scrollY < preScrollY).toString()
-        preScrollY = window.scrollY
-      })
+        this.classList.toggle('not-top', window.scrollY > 20);
+        this.dataset.show = (window.scrollY < 350 || window.scrollY < preScrollY).toString();
+        preScrollY = window.scrollY;
+      });
 
-      // Dark Mode
       function getCurrentTheme() {
-        return localStorage.getItem('theme')
+        return localStorage.getItem('theme');
       }
-      const toggleDarkModeButton = this.querySelector('#toggleDarkMode')
+
+      const toggleDarkModeButton = this.querySelector('#toggleDarkMode');
       toggleDarkModeButton?.addEventListener('click', () => {
         const toggleDarkModeEvent = new CustomEvent('theme-change', {
           detail: { theme: getCurrentTheme() === 'light' ? 'dark' : 'light' }
-        })
-        document.dispatchEvent(toggleDarkModeEvent)
-      })
+        });
+        document.dispatchEvent(toggleDarkModeEvent);
+      });
 
-      // Menu
-      const toggleMenuButton = this.querySelector('#toggleMenu')
+      const toggleMenuButton = this.querySelector('#toggleMenu');
       toggleMenuButton?.addEventListener('click', () => {
-        this.classList.toggle('expanded')
-      })
+        this.classList.toggle('expanded');
+      });
+
+      const playPauseLink = this.querySelector('#playPauseLink');
+
+      // Set initial button icon based on the stored play state
+      if (playPauseLink) {
+        const isPlaying = sessionStorage.getItem('isPlaying') === 'true';
+        playPauseLink.innerHTML = isPlaying 
+          ? '<svg class="size-6"><use href="/icons/header.svg#pause-circle-line"></use></svg>' // Pause icon
+          : '<svg class="size-6"><use href="/icons/header.svg#play-circle-line"></use></svg>'; // Play icon
+
+        playPauseLink.addEventListener('click', (e) => {
+          e.preventDefault(); // Prevent page refresh from anchor tag's default action
+          if (this.audio.paused) {
+            playPauseLink.innerHTML = '<svg class="size-6"><use href="/icons/header.svg#pause-circle-line"></use></svg>'; // Pause icon
+            this.audio.play();
+            sessionStorage.setItem('isPlaying', 'true'); // Save play state
+          } else {
+            playPauseLink.innerHTML = '<svg class="size-6"><use href="/icons/header.svg#play-circle-line"></use></svg>'; // Play icon
+            this.audio.pause();
+            sessionStorage.setItem('isPlaying', 'false'); // Save play state
+          }
+        });
+      }
     }
   }
-  customElements.define('header-component', Header)
+
+  // Register the header component
+  customElements.define('header-component', Header);
 </script>
 
 <style>
@@ -164,5 +225,15 @@ import { siteConfig, menuLinks } from '@/site-config'
         rgba(39, 39, 42, 0.08) 0px 10px 15px -3px,
         rgba(39, 39, 42, 0.08) 0px 4px 6px -4px;
     }
+  }
+
+  /* Add hover effect for play/pause button */
+  #playPauseButton svg {
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth transition */
+  }
+
+  #playPauseButton:hover svg {
+    transform: scale(1.2); /* Slightly enlarge the icon */
+    opacity: 0.8; /* Slightly fade the icon */
   }
 </style>
