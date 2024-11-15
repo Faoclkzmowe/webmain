@@ -113,7 +113,7 @@ declare global {
 
       // Check if audio instance already exists and use it; otherwise, create a new one
       if (!window.audioInstance) {
-        window.audioInstance = new Audio('public/audio/songu.mp3');
+        window.audioInstance = new Audio('/audio/songu.mp3');
         window.audioInstance.volume = 0.1;
         window.audioInstance.loop = false; // Disable looping
 
