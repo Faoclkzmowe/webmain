@@ -1,30 +1,35 @@
 ---
-// CopyButton.astro
 const { text } = Astro.props;
 ---
 
 <script>
-  function setupCopyTextListeners() {
+  // Function to initialize copy button event listeners
+  const initCopyButtons = () => {
     const copyTextElements = document.querySelectorAll('.copy-text');
 
     copyTextElements.forEach((element) => {
       const el = element as HTMLElement; // Explicitly cast to HTMLElement
       const originalText = el.innerText;
-      const copyText = el.dataset.copyText;
+      const copyText = el.dataset.copyText; // Get the custom text to be copied
 
       el.addEventListener('click', () => {
+        // Copy the custom text to clipboard
         navigator.clipboard.writeText(copyText || '').then(() => {
+          // Change the text to "Command copied!" for 0.8 seconds
           el.innerText = 'Command copied!';
+
+          // Revert back to the original text after 0.8 seconds
           setTimeout(() => {
             el.innerText = originalText;
           }, 800);
         });
       });
     });
-  }
+  };
 
-  // Re-run setup on page load or hydration
-  document.addEventListener('astro:load', setupCopyTextListeners);
-  document.addEventListener('astro:visible', setupCopyTextListeners);
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', initCopyButtons);
+
+  // Reinitialize on Astro page transitions
+  document.addEventListener('astro:page-load', initCopyButtons);
 </script>
-
