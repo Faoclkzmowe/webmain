@@ -137,6 +137,69 @@ const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
         -0.025em -0.05em 0 rgba(0, 0, 255, 0.75);
     }
   }
+
+  .text-container > span {
+  animation: glow 4s ease-in-out infinite;
+  }
+
+  @keyframes glow {
+    0%, 100% {
+      color: #659EB9;
+      text-shadow: 0 0 10px #0652DD, 0 0 50px #0652DD, 0 0 100px #0652DD;
+    }
+    
+    10%, 90% {
+      color: rgb(17, 17, 17);
+      text-shadow: none;
+    }
+
+    50% {
+      /* Add a state change to correspond with 2.75s in a 4s animation */
+      color: #8E44AD;
+      text-shadow: 0 0 10px #8E44AD, 0 0 50px #8E44AD, 0 0 100px #8E44AD;
+    }
+  }
+
+
+  .text-container > span:nth-child(2) {
+    animation-delay: 0.25s;
+  }
+
+  .text-container > span:nth-child(3) {
+    animation-delay: 0.5s;
+  }
+
+  .text-container > span:nth-child(4) {
+    animation-delay: 0.75s;
+  }
+
+  .text-container > span:nth-child(5) {
+    animation-delay: 1s;
+  }
+
+  .text-container > span:nth-child(6) {
+    animation-delay: 1.25s;
+  }
+
+  .text-container > span:nth-child(7) {
+    animation-delay: 1.5s;
+  }
+
+  .text-container > span:nth-child(8) {
+    animation-delay: 1.75s;
+  }
+
+  .text-container > span:nth-child(9) {
+    animation-delay: 2s;
+  }
+
+  .text-container > span:nth-child(10) {
+    animation-delay: 2.25s;
+  }
+
+  .text-container > span:nth-child(11) {
+    animation-delay: 2.5s;
+  }
 </style>
 
 <PageLayout meta={{ title: 'Home' }} highlightColor='#659EB966'>
@@ -150,7 +213,20 @@ const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
       />
 
       <div class='flex flex-col items-center gap-y-4'>
-        <h1 class='text-4xl font-bold glitch'>{siteConfig.author}</h1>
+        <!-- <h1 class='text-4xl font-bold glitch'>{siteConfig.author}</h1> -->
+        <h1 class='text-container text-6xl font-bold'>
+          <span>w</span>
+          <span>i</span>
+          <span>t</span>
+          <span>c</span>
+          <span>h</span>
+          <span>h</span>
+          <span>u</span>
+          <span>n</span>
+          <span>t</span>
+          <span>e</span>
+          <span>d</span>
+        </h1>
         <div class='flex flex-wrap justify-center gap-x-7 gap-y-3'>
           <Label title='P4P Yapper'>
             <svg class='size-5' slot='icon'>
