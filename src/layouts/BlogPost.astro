@@ -105,6 +105,10 @@ const primaryColor = post.data.coverImage?.color ?? 'hsl(var(--primary) / var(--
   }
 
   #content :global(img) {
-    @apply mx-auto;
+    @apply mx-0;
+  }
+
+  #content :global(a) {
+    @apply no-underline;
   }
 </style>
