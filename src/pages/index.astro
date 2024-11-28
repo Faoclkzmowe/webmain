@@ -139,65 +139,88 @@ const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
   }
 
   .text-container > span {
-  animation: glow 4s ease-in-out infinite;
+    animation: glow 4s ease-in-out infinite;
+    color: rgb(17, 17, 17);
   }
 
   @keyframes glow {
-    0%, 100% {
+    25% {
       color: #659EB9;
-      text-shadow: 0 0 10px #0652DD, 0 0 50px #0652DD, 0 0 100px #0652DD;
+      text-shadow: 0 0 10px #0652DD, 0 0 25px #0652DD, 0 0 50px #0652DD;
     }
     
-    10%, 90% {
+    0%, 100% {
       color: rgb(17, 17, 17);
       text-shadow: none;
     }
 
-    50% {
-      /* Add a state change to correspond with 2.75s in a 4s animation */
+    75% {
       color: #8E44AD;
-      text-shadow: 0 0 10px #8E44AD, 0 0 50px #8E44AD, 0 0 100px #8E44AD;
+      text-shadow: 0 0 10px #8E44AD, 0 0 25px #8E44AD, 0 0 50px #8E44AD;
     }
   }
 
+  .text-container > span:nth-child(1) {
+    animation-duration: 4s;
+  }
 
   .text-container > span:nth-child(2) {
+    animation-duration: 4s;
+    animation-timing-function: ease-in-out;
     animation-delay: 0.25s;
   }
 
   .text-container > span:nth-child(3) {
+    animation-duration: 4s;
+    animation-timing-function: ease-in-out;
     animation-delay: 0.5s;
   }
 
   .text-container > span:nth-child(4) {
+    animation-duration: 4s;
+    animation-timing-function: ease-in-out;
     animation-delay: 0.75s;
   }
 
   .text-container > span:nth-child(5) {
+    animation-duration: 4s;
+    animation-timing-function: ease-in-out;
     animation-delay: 1s;
   }
 
   .text-container > span:nth-child(6) {
+    animation-duration: 4s;
+    animation-timing-function: ease-in-out;
     animation-delay: 1.25s;
   }
 
   .text-container > span:nth-child(7) {
+    animation-duration: 4s;
+    animation-timing-function: ease-in-out;
     animation-delay: 1.5s;
   }
 
   .text-container > span:nth-child(8) {
+    animation-duration: 4s;
+    animation-timing-function: ease-in-out;
     animation-delay: 1.75s;
   }
 
   .text-container > span:nth-child(9) {
+    animation-duration: 4s;
+    animation-timing-function: ease-in-out;
     animation-delay: 2s;
   }
 
   .text-container > span:nth-child(10) {
+    animation-duration: 4s;
+    animation-timing-function: ease-in-out;
     animation-delay: 2.25s;
   }
 
   .text-container > span:nth-child(11) {
+    animation-duration: 4s;
+    animation-timing-function: ease-in-out;
     animation-delay: 2.5s;
   }
 </style>
