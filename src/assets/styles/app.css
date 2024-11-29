@@ -118,6 +118,7 @@ span.katex-display {
 
 .markdown-alert {
   margin-top: 1.25rem !important;
+  margin-bottom: 0px !important;
 }
 
 .markdown-alert-title {

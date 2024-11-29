@@ -117,7 +117,7 @@ declare global {
       // Check if audio instance already exists and use it; otherwise, create a new one
       if (!window.audioInstance) {
         window.audioInstance = new Audio('/audio/ai.mp3');
-        window.audioInstance.volume = 0.1;
+        window.audioInstance.volume = 0.07;
         window.audioInstance.loop = false; // Disable looping
 
         // Add an event listener for the 'ended' event to reset play state and icon when audio finishes
