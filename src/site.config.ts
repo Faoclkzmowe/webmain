@@ -10,15 +10,15 @@ export const siteConfig: SiteConfig = {
   // Meta property used as the default description meta property
   description: "witchhunted's website",
   // HTML lang property, found in src/layouts/Base.astro L:18
-  lang: 'zh-CN, en-US',
+  lang: 'en-US',
   // Meta property, found in src/components/BaseHead.astro L:42
   ogLocale: 'en_US',
   // Date.prototype.toLocaleDateString() parameters, found in src/utils/date.ts.
   date: {
-    locale: 'en-US',
+    locale: 'en-UK',
     options: {
       day: 'numeric',
-      month: 'short',
+      month: 'numeric',
       year: 'numeric'
     }
   },
