@@ -2,7 +2,7 @@
 const { header: headerName, content: contentName, needPercent = true } = Astro.props
 ---
 
-<button
+<!-- <button
   aria-label='Back to Top'
   class='z-90 group fixed bottom-8 end-4 flex h-10 w-10 translate-y-28 items-center justify-center rounded-full border-2 border-transparent bg-primary-foreground text-muted-foreground opacity-0 transition-all duration-300 hover:border-border/75 data-[show=true]:translate-y-0 data-[show=true]:opacity-100 sm:end-8 sm:h-12 sm:w-12'
   data-show='false'
@@ -19,9 +19,22 @@ const { header: headerName, content: contentName, needPercent = true } = Astro.p
   >
     <use href='/icons/ui.svg#mingcute-up-line'></use>
   </svg>
+</button> -->
+
+<button
+  aria-label='Back to Top'
+  class='z-90 group fixed bottom-8 end-4 flex h-10 w-10 translate-y-28 items-center justify-center rounded-full border-2 border-transparent bg-primary-foreground text-muted-foreground opacity-0 transition-all duration-300 hover:border-border/75 data-[show=true]:translate-y-0 data-[show=true]:opacity-100 sm:end-8 sm:h-12 sm:w-12'
+  data-show='false'
+  id='to-top-btn'
+>
+  <svg
+    class='size-6 opacity-100 transition-opacity'
+  >
+    <use href='/icons/ui.svg#mingcute-up-line'></use>
+  </svg>
 </button>
 
-<script is:inline define:vars={{ headerName, contentName, needPercent }}>
+<!-- <script is:inline define:vars={{ headerName, contentName, needPercent }}>
   const scrollBtn = document.getElementById('to-top-btn')
   const scrollPercentEl = scrollBtn.children[0].children[0]
   const targetHeader = document.getElementById(headerName)
@@ -63,4 +76,51 @@ const { header: headerName, content: contentName, needPercent = true } = Astro.p
   } else {
     scrollBtn.classList.add('ended')
   }
+</script> -->
+
+<script is:inline define:vars={{ headerName, contentName }}>
+  let scrollBtn, targetHeader;
+
+  function initializeBackToTop() {
+    scrollBtn = document.getElementById('to-top-btn');
+    targetHeader = document.getElementById(headerName);
+
+    if (!scrollBtn || !targetHeader) return;
+
+    // Observer callback to toggle the visibility of the button
+    function callback(entries) {
+      entries.forEach((entry) => {
+        scrollBtn.dataset.show = (!entry.isIntersecting).toString();
+      });
+    }
+
+    // Smooth scroll to top
+    scrollBtn.addEventListener('click', () => {
+      document.documentElement.scrollTo({ behavior: 'smooth', top: 0 });
+    });
+
+    const observer = new IntersectionObserver(callback);
+    observer.observe(targetHeader);
+  }
+
+  // Utility function to detect page navigation and reinitialize
+  function handleNavigation() {
+    // Wait for the DOM to be updated before reinitializing
+    requestAnimationFrame(() => {
+      initializeBackToTop();
+    });
+  }
+
+  // Run on initial load
+  document.addEventListener('DOMContentLoaded', initializeBackToTop);
+
+  // Handle ViewTransition completion (fallback for Astro-specific needs)
+  document.addEventListener('astro:page-load', handleNavigation);
+
+  // Handle any other transition events if needed
+  document.addEventListener('transitionend', (e) => {
+    if (e.target.tagName === 'BODY') {
+      handleNavigation();
+    }
+  });
 </script>
