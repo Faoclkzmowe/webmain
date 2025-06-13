@@ -267,43 +267,4 @@ const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
       )
     }
   </div>
-<script>
-  const showAvatarInstantly = () => {
-    const avatar = document.querySelector('.avatar-hidden');
-    if (avatar) {
-      avatar.classList.remove('avatar-hidden');
-      avatar.classList.add('avatar-visible');
-    }
-  };
-
-  const revealAvatarWithAnimation = () => {
-    const avatar = document.querySelector('.avatar-hidden');
-    if (avatar) {
-      avatar.classList.remove('avatar-hidden');
-      avatar.classList.add('avatar-visible');
-      sessionStorage.setItem('avatarShown', 'true');
-
-      window.removeEventListener('click', revealAvatarWithAnimation);
-      window.removeEventListener('scroll', revealAvatarWithAnimation);
-      window.removeEventListener('keydown', revealAvatarWithAnimation);
-    }
-  };
-
-  const initAvatarReveal = () => {
-    if (sessionStorage.getItem('avatarShown') === 'true') {
-      showAvatarInstantly(); // Avatar was already revealed in this session
-    } else {
-      // Wait for first user interaction to trigger animation
-      window.addEventListener('click', revealAvatarWithAnimation);
-      window.addEventListener('scroll', revealAvatarWithAnimation);
-      window.addEventListener('keydown', revealAvatarWithAnimation);
-    }
-  };
-
-  // Run on full load
-  window.addEventListener('load', initAvatarReveal);
-
-  // Also re-run on Astro client-side navigation
-  document.addEventListener('astro:after-swap', initAvatarReveal);
-</script>
 </PageLayout>
