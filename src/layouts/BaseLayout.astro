@@ -47,42 +47,61 @@ const {
     </main>
   </body>
 <script>
-  const showAvatarInstantly = () => {
+  function revealElementsWithStagger() {
+    const bg = document.querySelector('.bg-hidden');
     const avatar = document.querySelector('.avatar-hidden');
+
+    if (bg) {
+      bg.classList.remove('bg-hidden');
+      bg.classList.add('bg-visible');
+    }
+
+    // Delay avatar reveal slightly after background
+    if (avatar) {
+      setTimeout(() => {
+        avatar.classList.remove('avatar-hidden');
+        avatar.classList.add('avatar-visible');
+      }, 1000); // Delay in ms
+    }
+
+    sessionStorage.setItem('homeRevealShown', 'true');
+
+    window.removeEventListener('click', revealElementsWithStagger);
+    window.removeEventListener('scroll', revealElementsWithStagger);
+    window.removeEventListener('keydown', revealElementsWithStagger);
+  }
+
+  function showElementsInstantly() {
+    const bg = document.querySelector('.bg-hidden');
+    const avatar = document.querySelector('.avatar-hidden');
+
+    if (bg) {
+      bg.classList.remove('bg-hidden');
+      bg.classList.add('bg-visible');
+    }
+
     if (avatar) {
       avatar.classList.remove('avatar-hidden');
       avatar.classList.add('avatar-visible');
     }
-  };
+  }
 
-  const revealAvatarWithAnimation = () => {
+  function initReveal() {
+    const bg = document.querySelector('.bg-hidden');
     const avatar = document.querySelector('.avatar-hidden');
-    if (avatar) {
-      avatar.classList.remove('avatar-hidden');
-      avatar.classList.add('avatar-visible');
-      sessionStorage.setItem('avatarShown', 'true');
 
-      window.removeEventListener('click', revealAvatarWithAnimation);
-      window.removeEventListener('scroll', revealAvatarWithAnimation);
-      window.removeEventListener('keydown', revealAvatarWithAnimation);
-    }
-  };
+    if (!bg && !avatar) return;
 
-  const initAvatarReveal = () => {
-    if (sessionStorage.getItem('avatarShown') === 'true') {
-      showAvatarInstantly(); // Avatar was already revealed in this session
+    if (sessionStorage.getItem('homeRevealShown') === 'true') {
+      showElementsInstantly();
     } else {
-      // Wait for first user interaction to trigger animation
-      window.addEventListener('click', revealAvatarWithAnimation);
-      window.addEventListener('scroll', revealAvatarWithAnimation);
-      window.addEventListener('keydown', revealAvatarWithAnimation);
+      window.addEventListener('click', revealElementsWithStagger);
+      window.addEventListener('scroll', revealElementsWithStagger);
+      window.addEventListener('keydown', revealElementsWithStagger);
     }
-  };
+  }
 
-  // Run on full load
-  window.addEventListener('load', initAvatarReveal);
-
-  // Also re-run on Astro client-side navigation
-  document.addEventListener('astro:after-swap', initAvatarReveal);
+  window.addEventListener('load', initReveal);
+  document.addEventListener('astro:after-swap', initReveal);
 </script>
 </html>
