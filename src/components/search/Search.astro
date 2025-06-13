@@ -61,9 +61,9 @@ const { class: className } = Astro.props
           let lastIndex = 0
 
           for (const [start, end] of indices) {
-            highlightedText += text.slice(lastIndex, start) // add part that doesn't match
-            highlightedText += `<span class="font-semibold underline">${text.slice(start, end + 1)}</span>` // add matched
-            lastIndex = end + 1
+            // highlightedText += text.slice(lastIndex, start) // add part that doesn't match
+            // highlightedText += `<span class="font-semibold underline">${text.slice(start, end + 1)}</span>` // add matched
+            // lastIndex = end + 1
           }
 
           highlightedText += text.slice(lastIndex) // continuing add exsists
@@ -96,15 +96,50 @@ const { class: className } = Astro.props
           .join('')
       }
 
-      function fetchSearchResults(fuse: any, search: string) {
-        const searchResult = fuse.search(search)
+function fetchSearchResults(fuse: any, search: string) {
+  const terms = search.trim().split(/\s+/).filter(Boolean)
 
-        searchReadout.textContent = search ? `Search results for “${search}”` : ''
-        resultsList.innerHTML =
-          searchResult.length > 0
-            ? generateSearchList(searchResult)
-            : '<p class="text-center py-12">No results found…</p>'
-      }
+  const tokens = terms.map(term => {
+    const cleanTerm = term.startsWith('#') ? term.slice(1).toLowerCase() : term.toLowerCase()
+
+    // Force match when only 1 char, or treat like minMatchCharLength = 1
+    const isShort = cleanTerm.length === 1
+
+    if (term.startsWith('#')) {
+      // search tags only
+      return isShort
+        ? { 'data.tags': `'${cleanTerm}` } // exact prefix match
+        : { 'data.tags': cleanTerm }
+    } else {
+      return isShort
+        ? {
+            $or: [
+              { 'data.title': `'${cleanTerm}` },
+              { 'data.description': `'${cleanTerm}` },
+              { 'data.tags': `'${cleanTerm}` },
+              { slug: `'${cleanTerm}` }
+            ]
+          }
+        : {
+            $or: [
+              { 'data.title': cleanTerm },
+              { 'data.description': cleanTerm },
+              { 'data.tags': cleanTerm },
+              { slug: cleanTerm }
+            ]
+          }
+    }
+  })
+
+  const searchQuery = tokens.length > 1 ? { $and: tokens } : tokens[0]
+  const searchResult = fuse.search(searchQuery)
+
+  searchReadout.textContent = search ? `Search results for “${search}”` : ''
+  resultsList.innerHTML =
+    searchResult.length > 0
+      ? generateSearchList(searchResult)
+      : '<p class="text-center py-12">No results found…</p>'
+}
 
       ;(async () => {
         try {
@@ -113,7 +148,10 @@ const { class: className } = Astro.props
             keys: ['slug', 'data.title', 'data.description', 'data.tags'],
             includeMatches: true,
             minMatchCharLength: 2,
-            threshold: 0.4
+            threshold: 0,
+            useExtendedSearch: true, // ← enable advanced search syntax
+            ignoreLocation: true,    // ← allows better partial matching across strings
+            includeScore: true,
           })
 
           const urlParams = DOMPurify.sanitize(
