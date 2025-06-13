@@ -47,7 +47,7 @@ const {
     </main>
   </body>
 <script>
-  function revealElementsWithStagger() {
+  function revealWithAnimation() {
     const bg = document.querySelector('.bg-hidden');
     const avatar = document.querySelector('.avatar-hidden');
 
@@ -56,22 +56,19 @@ const {
       bg.classList.add('bg-visible');
     }
 
-    // Delay avatar reveal slightly after background
     if (avatar) {
       setTimeout(() => {
         avatar.classList.remove('avatar-hidden');
         avatar.classList.add('avatar-visible');
-      }, 1000); // Delay in ms
+      }, 800); // stagger logo after bg
     }
 
     sessionStorage.setItem('homeRevealShown', 'true');
 
-    window.removeEventListener('click', revealElementsWithStagger);
-    window.removeEventListener('scroll', revealElementsWithStagger);
-    window.removeEventListener('keydown', revealElementsWithStagger);
+    removeListeners();
   }
 
-  function showElementsInstantly() {
+  function showInstantly() {
     const bg = document.querySelector('.bg-hidden');
     const avatar = document.querySelector('.avatar-hidden');
 
@@ -86,18 +83,27 @@ const {
     }
   }
 
+  function removeListeners() {
+    window.removeEventListener('click', revealWithAnimation);
+    window.removeEventListener('scroll', revealWithAnimation);
+    window.removeEventListener('keydown', revealWithAnimation);
+  }
+
   function initReveal() {
+    const isHome = window.location.pathname === '/'; // adjust if your homepage is at a subpath
+    if (!isHome) return;
+
     const bg = document.querySelector('.bg-hidden');
     const avatar = document.querySelector('.avatar-hidden');
 
     if (!bg && !avatar) return;
 
     if (sessionStorage.getItem('homeRevealShown') === 'true') {
-      showElementsInstantly();
+      showInstantly();
     } else {
-      window.addEventListener('click', revealElementsWithStagger);
-      window.addEventListener('scroll', revealElementsWithStagger);
-      window.addEventListener('keydown', revealElementsWithStagger);
+      window.addEventListener('click', revealWithAnimation);
+      window.addEventListener('scroll', revealWithAnimation);
+      window.addEventListener('keydown', revealWithAnimation);
     }
   }
 
