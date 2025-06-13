@@ -207,27 +207,32 @@ const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
   .avatar-hidden {
     opacity: 0;
     pointer-events: none;
+    user-select: none;
     transition: opacity 1s ease;
   }
 
   .avatar-visible {
     opacity: 1;
     pointer-events: auto;
+    user-select: none;
     transition: opacity 1s ease;
   }
 
   .avatar-visible:hover {
     opacity: 0;
+    user-select: none;
     transition: opacity 0.5s ease;
   }
 
   .bg-hidden {
     opacity: 0;
+    user-select: none;
     transition: opacity 1s ease;
   }
 
   .bg-visible {
     opacity: 0.2; /* matches your original */
+    user-select: none;
     transition: opacity 1s ease;
   }
 </style>
@@ -247,7 +252,7 @@ const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
         loading="eager"
       />
 
-      <div class='flex flex-col items-center gap-y-4'>
+      <div class='flex flex-col items-center gap-y-4' style="pointer-events: none;user-select: none;">
         <!-- <h1 class='text-4xl font-bold glitch'>{siteConfig.author}</h1> -->
         <h1 class='text-container text-6xl font-bold'>
           <span>w</span>
