@@ -241,6 +241,7 @@ const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
   <img
     src="/images/asdf.png"
     alt="background"
+    draggable="false" 
     class="bg-hidden fixed top-0 left-0 w-full h-full object-cover z-0"
   />
   <div class='flex w-full flex-col gap-y-10 md:w-4/5 lg:w-5/6'>
@@ -248,6 +249,7 @@ const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
       <Image
         src={avatar}
         alt="profile"
+        draggable="false" 
         class="avatar-hidden h-96 w-auto rounded-full border-l-2 border-r-2 border-purple-400 float-avatar"
         loading="eager"
       />
