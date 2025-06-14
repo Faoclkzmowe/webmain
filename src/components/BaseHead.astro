@@ -127,3 +127,40 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/witchprofile.png', A
 }
 
 <ViewTransitions />
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    let lastTrailTime = 0;
+    const trailInterval = 12.5; // create a trail every 50ms (increase this to slow it more)
+
+    document.addEventListener("mousemove", (e) => {
+      const now = Date.now();
+      if (now - lastTrailTime < trailInterval) return;
+      lastTrailTime = now;
+
+      const trail = document.createElement("img");
+      trail.src = "/images/cursortrail.png"; // your trail image
+      trail.style.position = "fixed";
+      trail.style.left = `${e.clientX}px`;
+      trail.style.top = `${e.clientY}px`;
+      trail.style.width = "20px";
+      trail.style.pointerEvents = "none";
+      trail.style.zIndex = "9999";
+      trail.style.opacity = "0.7";
+      trail.style.transition = "opacity 0.5s ease-out, transform 0.5s ease-out";
+
+      document.body.appendChild(trail);
+
+      // Animate out
+      setTimeout(() => {
+        trail.style.opacity = "0";
+        trail.style.transform = "scale(1.5)";
+      }, 0);
+
+      // Remove after animation
+      setTimeout(() => {
+        document.body.removeChild(trail);
+      }, 500);
+    });
+  });
+</script>

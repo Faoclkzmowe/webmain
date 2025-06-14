@@ -1,3 +1,7 @@
+* {
+  cursor: url('/images/cursor.png') 24.3 23.7,auto !important;
+}
+
 html {
   font-family: 'Satoshi', sans-serif;
 }
