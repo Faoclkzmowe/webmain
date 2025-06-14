@@ -47,67 +47,78 @@ const {
     </main>
   </body>
 <script>
-  function revealWithAnimation() {
-    const bg = document.querySelector('.bg-hidden');
-    const avatar = document.querySelector('.avatar-hidden');
+let revealTimeout: ReturnType<typeof setTimeout> | undefined;
 
-    if (bg) {
-      bg.classList.remove('bg-hidden');
-      bg.classList.add('bg-visible');
-    }
+function revealWithAnimation() {
+  const bg = document.querySelector('.bg-hidden');
+  const avatar = document.querySelector('.avatar-hidden');
 
-    if (avatar) {
-      setTimeout(() => {
-        avatar.classList.remove('avatar-hidden');
-        avatar.classList.add('avatar-visible');
-      }, 1150); // stagger logo after bg
-    }
-
-    sessionStorage.setItem('homeRevealShown', 'true');
-
-    removeListeners();
+  if (bg) {
+    bg.classList.remove('bg-hidden');
+    bg.classList.add('bg-visible');
   }
 
-  function showInstantly() {
-    const bg = document.querySelector('.bg-hidden');
-    const avatar = document.querySelector('.avatar-hidden');
-
-    if (bg) {
-      bg.classList.remove('bg-hidden');
-      bg.classList.add('bg-visible');
-    }
-
-    if (avatar) {
+  if (avatar) {
+    setTimeout(() => {
       avatar.classList.remove('avatar-hidden');
       avatar.classList.add('avatar-visible');
-    }
+    }, 1150);
   }
 
-  function removeListeners() {
-    window.removeEventListener('click', revealWithAnimation);
-    window.removeEventListener('scroll', revealWithAnimation);
-    window.removeEventListener('keydown', revealWithAnimation);
+  sessionStorage.setItem('homeRevealShown', 'true');
+
+  if (revealTimeout !== undefined) {
+    clearTimeout(revealTimeout);
   }
 
-  function initReveal() {
-    const isHome = window.location.pathname === '/'; // adjust if your homepage is at a subpath
-    if (!isHome) return;
+  removeListeners();
+}
 
-    const bg = document.querySelector('.bg-hidden');
-    const avatar = document.querySelector('.avatar-hidden');
+function showInstantly() {
+  const bg = document.querySelector('.bg-hidden');
+  const avatar = document.querySelector('.avatar-hidden');
 
-    if (!bg && !avatar) return;
-
-    if (sessionStorage.getItem('homeRevealShown') === 'true') {
-      showInstantly();
-    } else {
-      window.addEventListener('click', revealWithAnimation);
-      window.addEventListener('scroll', revealWithAnimation);
-      window.addEventListener('keydown', revealWithAnimation);
-    }
+  if (bg) {
+    bg.classList.remove('bg-hidden');
+    bg.classList.add('bg-visible');
   }
 
-  window.addEventListener('load', initReveal);
-  document.addEventListener('astro:after-swap', initReveal);
+  if (avatar) {
+    avatar.classList.remove('avatar-hidden');
+    avatar.classList.add('avatar-visible');
+  }
+}
+
+function removeListeners() {
+  window.removeEventListener('click', revealWithAnimation);
+  window.removeEventListener('scroll', revealWithAnimation);
+  window.removeEventListener('keydown', revealWithAnimation);
+}
+
+function initReveal() {
+  const isHome = window.location.pathname === '/';
+  if (!isHome) return;
+
+  const bg = document.querySelector('.bg-hidden');
+  const avatar = document.querySelector('.avatar-hidden');
+
+  if (!bg && !avatar) return;
+
+  if (sessionStorage.getItem('homeRevealShown') === 'true') {
+    showInstantly();
+  } else {
+    // Listen for user interaction
+    window.addEventListener('click', revealWithAnimation);
+    window.addEventListener('scroll', revealWithAnimation);
+    window.addEventListener('keydown', revealWithAnimation);
+
+    // Fallback: auto-reveal after 5 seconds of no interaction
+    let revealTimeout: ReturnType<typeof setTimeout>;
+    revealTimeout = setTimeout(revealWithAnimation, 1500);
+  }
+}
+
+window.addEventListener('load', initReveal);
+document.addEventListener('astro:after-swap', initReveal);
 </script>
 </html>
