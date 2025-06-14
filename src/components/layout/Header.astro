@@ -67,11 +67,11 @@ declare global {
             </div>
             <div class='flex w-full grow flex-row justify-end gap-x-3 sm:w-fit sm:gap-x-5'>
               <!-- <span id="playPauseButton">Play</span> -->
-              <a style="cursor:pointer" id="playPauseLink" class="play-pause-link">
+              <!-- <a style="cursor:pointer" id="playPauseLink" class="play-pause-link">
                 <svg class="size-6">
                   <use href="/icons/header.svg#play-circle-line"></use>
                 </svg>
-              </a>
+              </a> -->
             </div>
             
           </div>
@@ -107,7 +107,7 @@ declare global {
   </header>
 </header-component>
 
-<script>
+<!-- <script>
   class Header extends HTMLElement {
     private audio: HTMLAudioElement;
 
@@ -134,9 +134,19 @@ declare global {
       this.audio = window.audioInstance;
 
       // Play the audio if sessionStorage indicates it should be playing
-      if (sessionStorage.getItem('isPlaying') === 'true' && this.audio.paused) {
-        this.audio.play();
+      if (sessionStorage.getItem('isPlaying') === 'true') {
+        this.audio.play().then(() => {
+          // Playback started successfully, keep icon as pause
+        }).catch((err) => {
+          // Autoplay failed (likely due to user gesture requirement)
+          sessionStorage.setItem('isPlaying', 'false');
+          const playPauseLink = document.querySelector('#playPauseLink');
+          if (playPauseLink) {
+            playPauseLink.innerHTML = '<svg class="size-6"><use href="/icons/header.svg#play-circle-line"></use></svg>';
+          }
+        });
       }
+
     }
 
     connectedCallback() {
@@ -193,7 +203,7 @@ declare global {
 
   // Register the header component
   customElements.define('header-component', Header);
-</script>
+</script> -->
 
 <style>
   /* header-componnet */
