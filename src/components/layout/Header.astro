@@ -115,7 +115,7 @@ declare global {
 
   document.addEventListener('click', (event) => {
     const menu = document.getElementById('custom-context-menu');
-    if (menu && !menu.contains(event.target)) {
+    if (menu && event.target instanceof Node && !menu.contains(event.target)) {
       menu.classList.add('hidden');
     }
   });
@@ -130,24 +130,24 @@ declare global {
     document.getElementById('custom-context-menu')?.classList.add('hidden');
   });
 
-  function showCustomMenu(x, y) {
-    const menu = document.getElementById('custom-context-menu');
-    if (!menu) return; // safety check
+  function showCustomMenu(x: number, y: number) {
+  const menu = document.getElementById('custom-context-menu');
+  if (!menu) return; // safety check
 
-    menu.style.left = `${x}px`;
-    menu.style.top = `${y}px`;
-    menu.classList.remove('hidden');
+  menu.style.left = `${x}px`;
+  menu.style.top = `${y}px`;
+  menu.classList.remove('hidden');
 
-    // Optional: prevent the menu from going off-screen
-    const { innerWidth, innerHeight } = window;
-    const rect = menu.getBoundingClientRect();
+  // Optional: prevent the menu from going off-screen
+  const { innerWidth, innerHeight } = window;
+  const rect = menu.getBoundingClientRect();
 
-    if (x + rect.width > innerWidth) {
-      menu.style.left = `${innerWidth - rect.width - 10}px`;
-    }
-    if (y + rect.height > innerHeight) {
-      menu.style.top = `${innerHeight - rect.height - 10}px`;
-    }
+  if (x + rect.width > innerWidth) {
+    menu.style.left = `${innerWidth - rect.width - 10}px`;
+  }
+  if (y + rect.height > innerHeight) {
+    menu.style.top = `${innerHeight - rect.height - 10}px`;
+  }
 }
 </script>
 
