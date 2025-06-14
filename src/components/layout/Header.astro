@@ -108,7 +108,6 @@ declare global {
 </header-component>
 
 <script>
-  // === Context Menu Handling ===
   document.addEventListener('contextmenu', (event) => {
     event.preventDefault();
     showCustomMenu(event.clientX, event.clientY);
@@ -133,12 +132,13 @@ declare global {
 
   function showCustomMenu(x, y) {
     const menu = document.getElementById('custom-context-menu');
-    if (!menu) return;
+    if (!menu) return; // safety check
 
     menu.style.left = `${x}px`;
     menu.style.top = `${y}px`;
     menu.classList.remove('hidden');
 
+    // Optional: prevent the menu from going off-screen
     const { innerWidth, innerHeight } = window;
     const rect = menu.getBoundingClientRect();
 
@@ -148,69 +148,85 @@ declare global {
     if (y + rect.height > innerHeight) {
       menu.style.top = `${innerHeight - rect.height - 10}px`;
     }
-  }
+}
 </script>
+
 <script>
-  // Setup audio globally
-  let audio = window.audioInstance;
-  if (!audio) {
-    audio = new Audio('/audio/songs.mp3');
-    audio.volume = 0.07;
-    audio.loop = sessionStorage.getItem('isLooping') === 'true';
-    window.audioInstance = audio;
+  class Header extends HTMLElement {
+    audio: HTMLAudioElement; // <-- Declare audio property here
+    constructor() {
+      super();
 
-    audio.addEventListener('ended', () => {
-      sessionStorage.setItem('isPlaying', 'false');
-      const playBtn = document.getElementById('playPauseBtn');
-      if (playBtn) playBtn.innerText = '▶️ Play Music';
-    });
-  }
+      // Initialize or reuse audio instance
+      if (!window.audioInstance) {
+        window.audioInstance = new Audio('/audio/songs.mp3');
+        window.audioInstance.volume = 0.07;
 
-  function updateUI() {
-    const playBtn = document.getElementById('playPauseBtn');
-    const loopBtn = document.getElementById('loopToggleBtn');
+        // Load loop setting from sessionStorage
+        const storedLoop = sessionStorage.getItem('isLooping') === 'true';
+        window.audioInstance.loop = storedLoop;
 
-    if (playBtn) {
-      const isPlaying = sessionStorage.getItem('isPlaying') === 'true';
-      playBtn.innerText = isPlaying ? '⏸️ Pause Music' : '▶️ Play Music';
-
-      if (isPlaying && audio.paused) {
-        audio.play().catch(() => {
+        // Listen for when audio ends
+        window.audioInstance.addEventListener('ended', () => {
           sessionStorage.setItem('isPlaying', 'false');
-          playBtn.innerText = '▶️ Play Music';
+          const playBtn = document.getElementById('playPauseBtn');
+          if (playBtn) playBtn.innerText = '▶️ Play Music';
         });
       }
 
-      playBtn.onclick = () => {
-        if (audio.paused) {
-          audio.play();
-          playBtn.innerText = '⏸️ Pause Music';
-          sessionStorage.setItem('isPlaying', 'true');
-        } else {
-          audio.pause();
-          playBtn.innerText = '▶️ Play Music';
-          sessionStorage.setItem('isPlaying', 'false');
-        }
-      };
+      this.audio = window.audioInstance;
     }
 
-    if (loopBtn) {
-      // Always reflect latest loop state
-      loopBtn.innerText = audio.loop ? '✔️ Loop Music' : '❌ Loop Music';
+    connectedCallback() {
+      const playBtn = document.getElementById('playPauseBtn');
+      const loopBtn = document.getElementById('loopToggleBtn');
 
-      loopBtn.onclick = () => {
-        audio.loop = !audio.loop;
-        sessionStorage.setItem('isLooping', audio.loop.toString());
-        loopBtn.innerText = audio.loop ? '✔️ Loop Music' : '❌ Loop Music';
-      };
+      // === Play Button Logic ===
+      if (playBtn) {
+        const isPlaying = sessionStorage.getItem('isPlaying') === 'true';
+        playBtn.innerText = isPlaying ? '⏸️ Pause Music' : '▶️ Play Music';
+
+        if (isPlaying) {
+          this.audio.play().catch(() => {
+            sessionStorage.setItem('isPlaying', 'false');
+            playBtn.innerText = '▶️ Play Music';
+          });
+        }
+
+        playBtn.onclick = () => {
+          if (this.audio.paused) {
+            this.audio.play();
+            playBtn.innerText = '⏸️ Pause Music';
+            sessionStorage.setItem('isPlaying', 'true');
+          } else {
+            this.audio.pause();
+            playBtn.innerText = '▶️ Play Music';
+            sessionStorage.setItem('isPlaying', 'false');
+          }
+        };
+      }
+
+      // === Loop Button Logic ===
+      if (loopBtn) {
+        // Ensure button text reflects current loop state
+        loopBtn.innerText = this.audio.loop ? '✔️ Loop Music' : '❌ Loop Music';
+
+        loopBtn.onclick = () => {
+          this.audio.loop = !this.audio.loop;
+          sessionStorage.setItem('isLooping', this.audio.loop.toString());
+          loopBtn.innerText = this.audio.loop ? '✔️ Loop Music' : '❌ Loop Music';
+        };
+      }
     }
   }
 
-  // Initial UI setup on full load
-  window.addEventListener('DOMContentLoaded', updateUI);
+  customElements.define('header-component', Header);
 
-  // If you use SPA navigation, rerun when page is swapped
-  document.addEventListener('astro:after-swap', updateUI);
+  // Manually trigger connectedCallback after DOM loads
+  document.querySelectorAll('header-component').forEach(el => {
+    const headerEl = el as Header;  // Assert the type
+    if (typeof headerEl.connectedCallback === 'function') headerEl.connectedCallback();
+  });
 </script>
 
 <!-- <script>
