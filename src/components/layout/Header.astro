@@ -153,7 +153,8 @@ declare global {
 
 <script>
   class Header extends HTMLElement {
-    audio: HTMLAudioElement; // <-- Declare audio property here
+    audio;
+
     constructor() {
       super();
 
@@ -166,7 +167,6 @@ declare global {
         const storedLoop = sessionStorage.getItem('isLooping') === 'true';
         window.audioInstance.loop = storedLoop;
 
-        // Listen for when audio ends
         window.audioInstance.addEventListener('ended', () => {
           sessionStorage.setItem('isPlaying', 'false');
           const playBtn = document.getElementById('playPauseBtn');
@@ -178,10 +178,39 @@ declare global {
     }
 
     connectedCallback() {
+      // Scroll behavior
+      let preScrollY = window.scrollY;
+      this.classList.toggle('not-top', preScrollY > 20);
+
+      window.addEventListener('scroll', () => {
+        this.classList.toggle('not-top', window.scrollY > 20);
+        this.dataset.show = (window.scrollY < 350 || window.scrollY < preScrollY).toString();
+        preScrollY = window.scrollY;
+      });
+
+      // Theme toggle
+      function getCurrentTheme() {
+        return localStorage.getItem('theme');
+      }
+
+      const toggleDarkModeButton = this.querySelector('#toggleDarkMode');
+      toggleDarkModeButton?.addEventListener('click', () => {
+        const toggleDarkModeEvent = new CustomEvent('theme-change', {
+          detail: { theme: getCurrentTheme() === 'light' ? 'dark' : 'light' }
+        });
+        document.dispatchEvent(toggleDarkModeEvent);
+      });
+
+      // Menu toggle
+      const toggleMenuButton = this.querySelector('#toggleMenu');
+      toggleMenuButton?.addEventListener('click', () => {
+        this.classList.toggle('expanded');
+      });
+
+      // === Audio Controls ===
       const playBtn = document.getElementById('playPauseBtn');
       const loopBtn = document.getElementById('loopToggleBtn');
 
-      // === Play Button Logic ===
       if (playBtn) {
         const isPlaying = sessionStorage.getItem('isPlaying') === 'true';
         playBtn.innerText = isPlaying ? '⏸️ Pause Music' : '▶️ Play Music';
@@ -206,9 +235,7 @@ declare global {
         };
       }
 
-      // === Loop Button Logic ===
       if (loopBtn) {
-        // Ensure button text reflects current loop state
         loopBtn.innerText = this.audio.loop ? '✔️ Loop Music' : '❌ Loop Music';
 
         loopBtn.onclick = () => {
@@ -221,12 +248,6 @@ declare global {
   }
 
   customElements.define('header-component', Header);
-
-  // Manually trigger connectedCallback after DOM loads
-  document.querySelectorAll('header-component').forEach(el => {
-    const headerEl = el as Header;  // Assert the type
-    if (typeof headerEl.connectedCallback === 'function') headerEl.connectedCallback();
-  });
 </script>
 
 <!-- <script>
