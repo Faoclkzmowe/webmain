@@ -76,7 +76,7 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/witchprofile.png', A
 <meta content={socialImageURL} property='twitter:image' />
 
 {/* Telegram */}
-<meta name='telegram:channel' content='@cworld0_cn' />
+<meta name='telegram:channel' content='.' />
 
 {/* Sitemap */}
 <link href='/sitemap-index.xml' rel='sitemap' />
@@ -119,11 +119,11 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/witchprofile.png', A
 
 {/* user script */}
 {
-  isProd && (
-    <script>
-      console.log( 'https://witchhunted.win by witchhunted')
-    </script>
-  )
+  // isProd && (
+  //   <script>
+  //     console.log( 'https://witchhunted.win by witchhunted')
+  //   </script>
+  // )
 }
 
 <ViewTransitions />
@@ -158,9 +158,9 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/witchprofile.png', A
       }, 0);
 
       // Remove after animation
-      setTimeout(() => {
-        document.body.removeChild(trail);
-      }, 500);
+      // setTimeout(() => {
+      //   document.body.removeChild(trail);
+      // }, 500);
     });
   });
 </script>
