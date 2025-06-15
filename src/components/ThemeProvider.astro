@@ -8,7 +8,11 @@
 
   // Get user preference from local storage or from browser preference
   function getUserPref() {
-    return localStorage.getItem('theme') || (lightModePref.matches ? 'light' : 'dark')
+    // color depends on system settings
+    // return localStorage.getItem('theme') || (lightModePref.matches ? 'light' : 'dark')
+    // force darkmode
+    return localStorage.getItem('theme') || 'dark'
+
   }
 
   function setTheme(theme, save = false) {
