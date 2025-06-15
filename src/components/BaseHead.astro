@@ -166,23 +166,82 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/witchprofile.png', A
 </script>
 
 <style>
-.bc{
+.bc, .pc {
+  transition: background-color 0.15s ease; /* Add smooth background transition */
 }
+
 .bc:hover {
   background-color: #659EB9;
   pointer-events: auto;
   user-select: none;
 }
-.pc{
-}
+
 .pc:hover {
   background-color: #8E44AD;
   pointer-events: auto;
   user-select: none;
 }
+
+#custom-context-menu {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.225s ease, visibility 0.225s ease;
+  pointer-events: none; /* Prevents interaction when hidden */
+}
+
+#custom-context-menu.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+@keyframes rotateBorder {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+#custom-context-menu.animated-border {
+  /* z-index: 0; */
+  overflow: hidden;
+  border-radius: 1rem;
+  /* Glow effect */
+  filter: drop-shadow(0 0 3.5px #659EB9)
+          drop-shadow(0 0 3.5px #8E44AD);
+}
+
+#custom-context-menu.animated-border::before {
+  content: '';
+  position: absolute;
+  z-index: -2;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: conic-gradient(from 0deg, #659EB9, #8E44AD, #659EB9);
+  animation: spin 3s linear infinite;
+  border-radius: 50%;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#custom-context-menu.animated-border::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 4px;
+  top: 4px;
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
+  background-color: #1D1D20;
+  border-radius: 0.875rem;
+}
 </style>
 
-<div id="custom-context-menu" class="hidden fixed bg-gray shadow-lg p-1 z-50" style="background-color: #1D1D20;border-radius: 1rem;">
+<div id="custom-context-menu" class="animated-border fixed shadow-lg p-1 z-50" style="background-color: #1D1D20; border-radius: 1rem;">
   <ul>
     <li style="border-radius: 1rem;"class="bc px-4 py-2 hover:bg-blue-500 cursor-pointer rounded" onclick="if(window.audioInstance){ window.audioInstance.pause(); window.audioInstance.currentTime = 0; sessionStorage.setItem('isPlaying', 'false'); } location.reload();">⚙️ Refresh</li>
     <hr style="margin: 10px 19px; border-color: #ccc;" />

@@ -108,47 +108,51 @@ declare global {
 </header-component>
 
 <script>
+  const menu = document.getElementById('custom-context-menu');
+
   document.addEventListener('contextmenu', (event) => {
     event.preventDefault();
     showCustomMenu(event.clientX, event.clientY);
   });
 
   document.addEventListener('click', (event) => {
-    const menu = document.getElementById('custom-context-menu');
     if (menu && event.target instanceof Node && !menu.contains(event.target)) {
-      menu.classList.add('hidden');
+      hideCustomMenu();
     }
   });
 
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
-      document.getElementById('custom-context-menu')?.classList.add('hidden');
-    }
+    if (event.key === 'Escape') hideCustomMenu();
   });
 
-  window.addEventListener('scroll', () => {
-    document.getElementById('custom-context-menu')?.classList.add('hidden');
-  });
+  window.addEventListener('scroll', hideCustomMenu);
 
   function showCustomMenu(x: number, y: number) {
-  const menu = document.getElementById('custom-context-menu');
-  if (!menu) return; // safety check
+    if (!menu) return;
 
-  menu.style.left = `${x}px`;
-  menu.style.top = `${y}px`;
-  menu.classList.remove('hidden');
+    // Position the menu
+    menu.style.left = `${x}px`;
+    menu.style.top = `${y}px`;
 
-  // Optional: prevent the menu from going off-screen
-  const { innerWidth, innerHeight } = window;
-  const rect = menu.getBoundingClientRect();
+    // Prevent off-screen overflow
+    const { innerWidth, innerHeight } = window;
+    const rect = menu.getBoundingClientRect();
 
-  if (x + rect.width > innerWidth) {
-    menu.style.left = `${innerWidth - rect.width - 10}px`;
+    if (x + rect.width > innerWidth) {
+      menu.style.left = `${innerWidth - rect.width - 10}px`;
+    }
+    if (y + rect.height > innerHeight) {
+      menu.style.top = `${innerHeight - rect.height - 10}px`;
+    }
+
+    // Show with fade-in
+    menu.classList.add('visible');
   }
-  if (y + rect.height > innerHeight) {
-    menu.style.top = `${innerHeight - rect.height - 10}px`;
+
+  function hideCustomMenu() {
+    if (!menu) return;
+    menu.classList.remove('visible');
   }
-}
 </script>
 
 <script>
