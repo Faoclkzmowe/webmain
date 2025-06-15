@@ -190,7 +190,7 @@ declare global {
         window.audioInstance.addEventListener('ended', () => {
           sessionStorage.setItem('isPlaying', 'false');
           const playBtn = document.getElementById('playPauseBtn');
-          if (playBtn) playBtn.innerText = '▶️ Play Music';
+          if (playBtn) playBtn.innerText = '🎶 Play Music';
         });
       }
 
@@ -233,23 +233,23 @@ declare global {
 
       if (playBtn) {
         const isPlaying = sessionStorage.getItem('isPlaying') === 'true';
-        playBtn.innerText = isPlaying ? '⏸️ Pause Music' : '▶️ Play Music';
+        playBtn.innerText = isPlaying ? '🔇 Pause Music' : '🎶 Play Music';
 
         if (isPlaying) {
           this.audio.play().catch(() => {
             sessionStorage.setItem('isPlaying', 'false');
-            playBtn.innerText = '▶️ Play Music';
+            playBtn.innerText = '🎶 Play Music';
           });
         }
 
         playBtn.onclick = () => {
           if (this.audio.paused) {
             this.audio.play();
-            playBtn.innerText = '⏸️ Pause Music';
+            playBtn.innerText = '🔇 Pause Music';
             sessionStorage.setItem('isPlaying', 'true');
           } else {
             this.audio.pause();
-            playBtn.innerText = '▶️ Play Music';
+            playBtn.innerText = '🎶 Play Music';
             sessionStorage.setItem('isPlaying', 'false');
           }
         };
