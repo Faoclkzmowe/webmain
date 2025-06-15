@@ -107,51 +107,67 @@ declare global {
   </header>
 </header-component>
 
-<script>
-  const menu = document.getElementById('custom-context-menu');
-
-  document.addEventListener('contextmenu', (event) => {
-    event.preventDefault();
-    showCustomMenu(event.clientX, event.clientY);
-  });
-
-  document.addEventListener('click', (event) => {
-    if (menu && event.target instanceof Node && !menu.contains(event.target)) {
-      hideCustomMenu();
-    }
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') hideCustomMenu();
-  });
-
-  window.addEventListener('scroll', hideCustomMenu);
-
-  function showCustomMenu(x: number, y: number) {
+<script type="module">
+  function setupCustomContextMenu() {
+    const menu = document.getElementById('custom-context-menu');
     if (!menu) return;
 
-    // Position the menu
-    menu.style.left = `${x}px`;
-    menu.style.top = `${y}px`;
+    // Prevent duplicate bindings
+    document.removeEventListener('contextmenu', onContextMenu);
+    document.removeEventListener('click', onClickOutside);
+    document.removeEventListener('keydown', onEscape);
+    window.removeEventListener('scroll', hideCustomMenu);
 
-    // Prevent off-screen overflow
-    const { innerWidth, innerHeight } = window;
-    const rect = menu.getBoundingClientRect();
+    document.addEventListener('contextmenu', onContextMenu);
+    document.addEventListener('click', onClickOutside);
+    document.addEventListener('keydown', onEscape);
+    window.addEventListener('scroll', hideCustomMenu);
 
-    if (x + rect.width > innerWidth) {
-      menu.style.left = `${innerWidth - rect.width - 10}px`;
+    function onContextMenu(event) {
+      event.preventDefault();
+      showCustomMenu(event.clientX, event.clientY);
     }
-    if (y + rect.height > innerHeight) {
-      menu.style.top = `${innerHeight - rect.height - 10}px`;
+
+    function onClickOutside(event) {
+      if (event.target instanceof Node && !menu.contains(event.target)) {
+        hideCustomMenu();
+      }
     }
 
-    // Show with fade-in
-    menu.classList.add('visible');
+    function onEscape(event) {
+      if (event.key === 'Escape') hideCustomMenu();
+    }
+
+    function showCustomMenu(x, y) {
+      menu.style.left = `${x}px`;
+      menu.style.top = `${y}px`;
+
+      const { innerWidth, innerHeight } = window;
+      const rect = menu.getBoundingClientRect();
+
+      if (x + rect.width > innerWidth) {
+        menu.style.left = `${innerWidth - rect.width - 10}px`;
+      }
+      if (y + rect.height > innerHeight) {
+        menu.style.top = `${innerHeight - rect.height - 10}px`;
+      }
+
+      menu.classList.add('visible');
+    }
+
+    function hideCustomMenu() {
+      menu.classList.remove('visible');
+    }
   }
 
-  function hideCustomMenu() {
-    if (!menu) return;
-    menu.classList.remove('visible');
+  // Run on first load
+  setupCustomContextMenu();
+
+  // Re-run after every view transition
+  if (document.startViewTransition) {
+    document.addEventListener('astro:after-swap', () => {
+      setupCustomContextMenu();
+    });
   }
 </script>
 
