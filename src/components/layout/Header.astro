@@ -181,6 +181,35 @@ class Header extends HTMLElement {
   constructor() {
     super();
 
+    // Scroll behavior
+    let preScrollY = window.scrollY;
+    this.classList.toggle('not-top', preScrollY > 20);
+
+    window.addEventListener('scroll', () => {
+      this.classList.toggle('not-top', window.scrollY > 20);
+      this.dataset.show = (window.scrollY < 350 || window.scrollY < preScrollY).toString();
+      preScrollY = window.scrollY;
+    });
+
+    // Theme toggle
+    function getCurrentTheme() {
+      return localStorage.getItem('theme');
+    }
+
+    const toggleDarkModeButton = this.querySelector('#toggleDarkMode');
+    toggleDarkModeButton?.addEventListener('click', () => {
+      const toggleDarkModeEvent = new CustomEvent('theme-change', {
+        detail: { theme: getCurrentTheme() === 'light' ? 'dark' : 'light' }
+      });
+      document.dispatchEvent(toggleDarkModeEvent);
+    });
+
+    // Menu toggle
+    const toggleMenuButton = this.querySelector('#toggleMenu');
+    toggleMenuButton?.addEventListener('click', () => {
+      this.classList.toggle('expanded');
+    });
+
     // Restore saved cursor trail state from localStorage or default to true
     const savedTrail = localStorage.getItem('cursorTrailEnabled');
     this.trailEnabled = savedTrail !== null ? savedTrail === 'true' : true;
