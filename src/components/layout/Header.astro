@@ -181,35 +181,6 @@ class Header extends HTMLElement {
   constructor() {
     super();
 
-    // Scroll behavior
-    let preScrollY = window.scrollY;
-    this.classList.toggle('not-top', preScrollY > 20);
-
-    window.addEventListener('scroll', () => {
-      this.classList.toggle('not-top', window.scrollY > 20);
-      this.dataset.show = (window.scrollY < 350 || window.scrollY < preScrollY).toString();
-      preScrollY = window.scrollY;
-    });
-
-    // Theme toggle
-    function getCurrentTheme() {
-      return localStorage.getItem('theme');
-    }
-
-    const toggleDarkModeButton = this.querySelector('#toggleDarkMode');
-    toggleDarkModeButton?.addEventListener('click', () => {
-      const toggleDarkModeEvent = new CustomEvent('theme-change', {
-        detail: { theme: getCurrentTheme() === 'light' ? 'dark' : 'light' }
-      });
-      document.dispatchEvent(toggleDarkModeEvent);
-    });
-
-    // Menu toggle
-    const toggleMenuButton = this.querySelector('#toggleMenu');
-    toggleMenuButton?.addEventListener('click', () => {
-      this.classList.toggle('expanded');
-    });
-
     // Restore saved cursor trail state from localStorage or default to true
     const savedTrail = localStorage.getItem('cursorTrailEnabled');
     this.trailEnabled = savedTrail !== null ? savedTrail === 'true' : true;
@@ -235,19 +206,83 @@ class Header extends HTMLElement {
     this.toggleCursorTrail = this.toggleCursorTrail.bind(this);
   }
 
-  connectedCallback() {
-    // Your existing scroll behavior, theme toggle, menu toggle, audio controls here
-    // ...
+connectedCallback() {
+  // Scroll behavior
+  let preScrollY = window.scrollY;
+  this.classList.toggle('not-top', preScrollY > 20);
 
-    // Add cursor trail listeners
-    document.addEventListener('mousemove', this.mouseMoveHandler);
+  window.addEventListener('scroll', () => {
+    this.classList.toggle('not-top', window.scrollY > 20);
+    this.dataset.show = (window.scrollY < 350 || window.scrollY < preScrollY).toString();
+    preScrollY = window.scrollY;
+  });
 
-    const toggleItem = document.getElementById('toggleCursorTrail');
-    if (toggleItem) {
-      toggleItem.addEventListener('click', this.toggleCursorTrail);
-      toggleItem.textContent = this.trailEnabled ? "✔️ Cursortrail" : "❌ Cursortrail";
-    }
+  // Theme toggle
+  function getCurrentTheme() {
+    return localStorage.getItem('theme');
   }
+
+  const toggleDarkModeButton = this.querySelector('#toggleDarkMode');
+  toggleDarkModeButton?.addEventListener('click', () => {
+    const toggleDarkModeEvent = new CustomEvent('theme-change', {
+      detail: { theme: getCurrentTheme() === 'light' ? 'dark' : 'light' }
+    });
+    document.dispatchEvent(toggleDarkModeEvent);
+  });
+
+  // Menu toggle
+  const toggleMenuButton = this.querySelector('#toggleMenu');
+  toggleMenuButton?.addEventListener('click', () => {
+    this.classList.toggle('expanded');
+  });
+
+  // Audio Controls
+  const playBtn = document.getElementById('playPauseBtn');
+  const loopBtn = document.getElementById('loopToggleBtn');
+
+  if (playBtn) {
+    const isPlaying = sessionStorage.getItem('isPlaying') === 'true';
+    playBtn.innerText = isPlaying ? '🔇 Pause Music' : '🎶 Play Music';
+
+    if (isPlaying) {
+      this.audio.play().catch(() => {
+        sessionStorage.setItem('isPlaying', 'false');
+        playBtn.innerText = '🎶 Play Music';
+      });
+    }
+
+    playBtn.onclick = () => {
+      if (this.audio.paused) {
+        this.audio.play();
+        playBtn.innerText = '🔇 Pause Music';
+        sessionStorage.setItem('isPlaying', 'true');
+      } else {
+        this.audio.pause();
+        playBtn.innerText = '🎶 Play Music';
+        sessionStorage.setItem('isPlaying', 'false');
+      }
+    };
+  }
+
+  if (loopBtn) {
+    loopBtn.innerText = this.audio.loop ? '✔️ Loop Music' : '❌ Loop Music';
+
+    loopBtn.onclick = () => {
+      this.audio.loop = !this.audio.loop;
+      sessionStorage.setItem('isLooping', this.audio.loop.toString());
+      loopBtn.innerText = this.audio.loop ? '✔️ Loop Music' : '❌ Loop Music';
+    };
+  }
+
+  // Cursor trail listeners
+  document.addEventListener('mousemove', this.mouseMoveHandler);
+
+  const toggleItem = document.getElementById('toggleCursorTrail');
+  if (toggleItem) {
+    toggleItem.addEventListener('click', this.toggleCursorTrail);
+    toggleItem.textContent = this.trailEnabled ? "✔️ Cursortrail" : "❌ Cursortrail";
+  }
+}
 
   disconnectedCallback() {
     // Clean up cursor trail listeners
