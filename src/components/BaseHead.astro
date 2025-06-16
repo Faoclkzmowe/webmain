@@ -128,56 +128,6 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/witchprofile.png', A
 
 <ViewTransitions />
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    let lastTrailTime = 0;
-    const trailInterval = 12.5;
-    let trailEnabled = true;
-
-    const mouseMoveHandler = (e: MouseEvent) => {
-      if (!trailEnabled) return;
-
-      const now = Date.now();
-      if (now - lastTrailTime < trailInterval) return;
-      lastTrailTime = now;
-
-      const trail = document.createElement("img");
-      trail.src = "/images/cursortrail.png";
-      trail.style.position = "fixed";
-      trail.style.left = `${e.clientX - 10}px`;
-      trail.style.top = `${e.clientY - 9}px`;
-      trail.style.width = "20px";
-      trail.style.pointerEvents = "none";
-      trail.style.zIndex = "9999";
-      trail.style.opacity = "0.7";
-      trail.style.transition = "opacity 0.5s ease-out, transform 0.5s ease-out";
-
-      document.body.appendChild(trail);
-
-      setTimeout(() => {
-        trail.style.opacity = "0";
-        trail.style.transform = "scale(1.5)";
-      }, 0);
-
-      setTimeout(() => trail.remove(), 500);
-    };
-
-    document.addEventListener("mousemove", mouseMoveHandler);
-
-    // Use your <li> element to toggle
-    const toggleItem = document.getElementById("toggleCursorTrail");
-
-    if (toggleItem) {
-      toggleItem.addEventListener("click", () => {
-        trailEnabled = !trailEnabled;
-        toggleItem.textContent = trailEnabled ? "✔️ Cursortrail" : "❌ Cursortrail";
-      });
-
-      toggleItem.textContent = "✔️ Cursortrail"; // initial state
-    }
-  });
-</script>
-
 <style>
 .bc, .pc {
   transition: background-color 0.15s ease; /* Add smooth background transition */
