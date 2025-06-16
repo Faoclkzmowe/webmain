@@ -158,9 +158,7 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/witchprofile.png', A
       }, 0);
 
       // Remove after animation
-      // setTimeout(() => {
-      //   document.body.removeChild(trail);
-      // }, 500);
+      setTimeout(() => trail.remove(), 500); // modern and safe
     });
   });
 </script>
