@@ -131,15 +131,18 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/witchprofile.png', A
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     let lastTrailTime = 0;
-    const trailInterval = 12.5; // create a trail every 50ms (increase this to slow it more)
+    const trailInterval = 12.5;
+    let trailEnabled = true;
 
-    document.addEventListener("mousemove", (e) => {
+    const mouseMoveHandler = (e: MouseEvent) => {
+      if (!trailEnabled) return;
+
       const now = Date.now();
       if (now - lastTrailTime < trailInterval) return;
       lastTrailTime = now;
 
       const trail = document.createElement("img");
-      trail.src = "/images/cursortrail.png"; // your trail image
+      trail.src = "/images/cursortrail.png";
       trail.style.position = "fixed";
       trail.style.left = `${e.clientX - 10}px`;
       trail.style.top = `${e.clientY - 9}px`;
@@ -151,15 +154,27 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/witchprofile.png', A
 
       document.body.appendChild(trail);
 
-      // Animate out
       setTimeout(() => {
         trail.style.opacity = "0";
         trail.style.transform = "scale(1.5)";
       }, 0);
 
-      // Remove after animation
-      setTimeout(() => trail.remove(), 500); // modern and safe
-    });
+      setTimeout(() => trail.remove(), 500);
+    };
+
+    document.addEventListener("mousemove", mouseMoveHandler);
+
+    // Use your <li> element to toggle
+    const toggleItem = document.getElementById("toggleCursorTrail");
+
+    if (toggleItem) {
+      toggleItem.addEventListener("click", () => {
+        trailEnabled = !trailEnabled;
+        toggleItem.textContent = trailEnabled ? "✔️ Cursortrail" : "❌ Cursortrail";
+      });
+
+      toggleItem.textContent = "✔️ Cursortrail"; // initial state
+    }
   });
 </script>
 
@@ -241,7 +256,8 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/witchprofile.png', A
 
 <div id="custom-context-menu" class="animated-border fixed shadow-lg p-1 z-50" style="background: rgba(11,11,16,0.5);; border-radius: 1rem;">
   <ul>
-    <li style="border-radius: 1rem;"class="bc px-4 py-2 hover:bg-blue-500 cursor-pointer rounded" onclick="if(window.audioInstance){ window.audioInstance.pause(); window.audioInstance.currentTime = 0; sessionStorage.setItem('isPlaying', 'false'); } location.reload();">⚙️ Refresh</li>
+    <!-- <li style="border-radius: 1rem;"class="bc px-4 py-2 hover:bg-blue-500 cursor-pointer rounded" onclick="if(window.audioInstance){ window.audioInstance.pause(); window.audioInstance.currentTime = 0; sessionStorage.setItem('isPlaying', 'false'); } location.reload();">⚙️ Refresh</li> -->
+    <li id="toggleCursorTrail" style="border-radius: 1rem;" class="bc px-4 py-2 hover:bg--500 cursor-pointer rounded">✔️ Cursortrail</li>
     <hr style="margin: 10px 19px; border-color: #ccc;" />
     <li id="playPauseBtn" style="border-radius: 1rem;" class="pc px-4 py-2 hover:bg-blue-500 cursor-pointer rounded">
       🎶 Play Music
