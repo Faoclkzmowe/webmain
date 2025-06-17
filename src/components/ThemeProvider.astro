@@ -4,14 +4,14 @@
 
 <!-- Use inline mode to quick load color, which can avoid splash -->
 <script is:inline>
-  // const lightModePref = window.matchMedia('(prefers-color-scheme: light)')
+  const lightModePref = window.matchMedia('(prefers-color-scheme: light)')
 
   // Get user preference from local storage or from browser preference
   function getUserPref() {
     // color depends on system settings
-    // return localStorage.getItem('theme') || (lightModePref.matches ? 'light' : 'dark')
+    return localStorage.getItem('theme') || (lightModePref.matches ? 'light' : 'dark')
     // force darkmode
-    return localStorage.getItem('theme') || 'dark'
+    // return localStorage.getItem('theme') || 'dark'
 
   }
 
@@ -43,7 +43,7 @@
   })
 
   // // Listen for prefers-color-scheme change
-  // lightModePref.addEventListener('change', (e) => {
-  //   setTheme(e.matches ? 'light' : 'dark')
-  // })
+  lightModePref.addEventListener('change', (e) => {
+    setTheme(e.matches ? 'light' : 'dark')
+  })
 </script>
