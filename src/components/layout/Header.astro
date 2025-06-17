@@ -209,14 +209,14 @@ class Header extends HTMLElement {
 
 connectedCallback() {
   // Scroll behavior
-  let preScrollY = window.scrollY;
-  this.classList.toggle('not-top', preScrollY > 20);
+  // let preScrollY = window.scrollY;
+  // this.classList.toggle('not-top', preScrollY > 20);
 
-  window.addEventListener('scroll', () => {
-    this.classList.toggle('not-top', window.scrollY > 20);
-    this.dataset.show = (window.scrollY < 350 || window.scrollY < preScrollY).toString();
-    preScrollY = window.scrollY;
-  });
+  // window.addEventListener('scroll', () => {
+  //   this.classList.toggle('not-top', window.scrollY > 20);
+  //   this.dataset.show = (window.scrollY < 350 || window.scrollY < preScrollY).toString();
+  //   preScrollY = window.scrollY;
+  // });
 
   // Theme toggle
   function getCurrentTheme() {
@@ -325,7 +325,7 @@ connectedCallback() {
 
   toggleCursorTrail() {
     this.trailEnabled = !this.trailEnabled;
-    localStorage.setItem('cursorTrailEnabled', this.trailEnabled.toString());
+    localStorage.setItem('Enabled', this.trailEnabled.toString());
 
     const toggleItem = document.getElementById('toggleCursorTrail');
     if (toggleItem) {
@@ -336,6 +336,45 @@ connectedCallback() {
 
 customElements.define('header-component', Header);
 
+</script>
+
+<script>
+let scrollListenerAdded = false;
+
+function setupHeaderScrollBehavior() {
+  const element = document.querySelector('header-component');
+  if (!element) return;
+
+  let preScrollY = window.scrollY;
+  element.classList.toggle('not-top', preScrollY > 20);
+
+  // If listener already added, remove previous before adding new (to avoid duplicates)
+  if (scrollListenerAdded) {
+    window.removeEventListener('scroll', onScroll);
+  }
+
+  function onScroll() {
+    if (!element) return;
+
+    const el = element as HTMLElement;
+    el.classList.toggle('not-top', window.scrollY > 20);
+    el.dataset.show = (window.scrollY < 350 || window.scrollY < preScrollY).toString();
+    preScrollY = window.scrollY;
+  }
+
+  window.addEventListener('scroll', onScroll);
+  scrollListenerAdded = true;
+}
+
+// Run on initial load
+setupHeaderScrollBehavior();
+
+// Re-run after every SPA page swap (Astro example)
+if (typeof document.startViewTransition === 'function') {
+  document.addEventListener('astro:after-swap', () => {
+    setupHeaderScrollBehavior();
+  });
+}
 </script>
 
 <!-- <script>
