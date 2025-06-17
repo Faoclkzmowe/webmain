@@ -370,11 +370,9 @@ function setupHeaderScrollBehavior() {
 setupHeaderScrollBehavior();
 
 // Re-run after every SPA page swap (Astro example)
-if (typeof document.startViewTransition === 'function') {
   document.addEventListener('astro:after-swap', () => {
     setupHeaderScrollBehavior();
   });
-}
 </script>
 
 <!-- <script>
