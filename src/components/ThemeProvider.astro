@@ -4,7 +4,10 @@
 
 <!-- Use inline mode to quick load color, which can avoid splash -->
 <script is:inline>
-  const lightModePref = window.matchMedia('(prefers-color-scheme: light)')
+  if (!window.lightModePref) {
+    window.lightModePref = window.matchMedia('(prefers-color-scheme: light)');
+  }
+  const lightModePref = window.lightModePref;
 
   // Get user preference from local storage or from browser preference
   function getUserPref() {
