@@ -178,9 +178,21 @@ class Header extends HTMLElement {
   lastTrailTime = 0;
   trailInterval = 12.5;
   trailEnabled = true;
+  hitsoundEnabled = true;
 
+  playClickSound() {
+    if (!this.hitsoundEnabled) return;
+    const clickSound = new Audio('/audio/click.wav');
+    clickSound.volume = 0.1;
+    clickSound.play();
+  }
+  
   constructor() {
     super();
+
+    // Load hitsound toggle state from localStorage
+    const savedHitsound = localStorage.getItem('hitsoundEnabled');
+    this.hitsoundEnabled = savedHitsound !== null ? savedHitsound === 'true' : false; // default false
 
     // Restore saved cursor trail state from localStorage or default to true
     const savedTrail = localStorage.getItem('cursorTrailEnabled');
@@ -218,6 +230,18 @@ connectedCallback() {
   //   preScrollY = window.scrollY;
   // });
 
+  const hitsoundBtn = document.getElementById('toggleHitsound');
+  if (hitsoundBtn) {
+    hitsoundBtn.textContent = this.hitsoundEnabled ? "✔️ Hitsound" : "❌ Hitsound";
+
+    hitsoundBtn.addEventListener('click', () => {
+      this.hitsoundEnabled = !this.hitsoundEnabled;
+      localStorage.setItem('hitsoundEnabled', this.hitsoundEnabled.toString());
+      hitsoundBtn.textContent = this.hitsoundEnabled ? "✔️ Hitsound" : "❌ Hitsound";
+      this.playClickSound(); // give audio feedback when toggling
+    });
+  }
+
   // Theme toggle
   function getCurrentTheme() {
     return localStorage.getItem('theme');
@@ -253,6 +277,7 @@ connectedCallback() {
     }
 
     playBtn.onclick = () => {
+      this.playClickSound(); 
       if (this.audio.paused) {
         this.audio.play();
         playBtn.innerText = '🔇 Pause Music';
@@ -269,10 +294,66 @@ connectedCallback() {
     loopBtn.innerText = this.audio.loop ? '✔️ Loop Music' : '❌ Loop Music';
 
     loopBtn.onclick = () => {
+      this.playClickSound();
       this.audio.loop = !this.audio.loop;
       sessionStorage.setItem('isLooping', this.audio.loop.toString());
       loopBtn.innerText = this.audio.loop ? '✔️ Loop Music' : '❌ Loop Music';
     };
+  }
+
+  // Restart
+  const restartBtn = document.getElementById('restartBtn');
+  if (restartBtn) {
+    restartBtn.addEventListener('click', () => {
+      this.playClickSound();
+      if (this.audio) {
+        this.audio.currentTime = 0;
+      }
+    });
+  }
+  
+  // Playback Rate Toggle
+  const playbackBtn = document.getElementById('playbackToggleBtn');
+  if (playbackBtn) {
+    const isFast = this.audio.playbackRate === 1.5;
+    playbackBtn.innerText = isFast ? '⏩ Double Time' : '▶️ NoMod';
+
+    playbackBtn.onclick = () => {
+      this.playClickSound();
+      const isCurrentlyFast = this.audio.playbackRate === 1.5;
+      this.audio.playbackRate = isCurrentlyFast ? 1 : 1.5;
+      playbackBtn.innerText = isCurrentlyFast ? '▶️ NoMod' : '⏩ Double Time';
+    };
+  }
+
+  // Increase/Decrease Volume
+  const volumeUpBtn = document.getElementById('volumeUpBtn');
+  if (volumeUpBtn) {
+    volumeUpBtn.addEventListener('click', () => {
+      this.playClickSound();
+      if (this.audio) {
+        this.audio.volume = Math.min(this.audio.volume + 0.02, 1); // max 1.0
+      }
+    });
+  }
+
+  const volumeDownBtn = document.getElementById('volumeDownBtn');
+  if (volumeDownBtn) {
+    volumeDownBtn.addEventListener('click', () => {
+      this.playClickSound();
+      if (this.audio) {
+        this.audio.volume = Math.max(this.audio.volume - 0.02, 0); // min 0.0
+      }
+    });
+  }
+
+  // Credit
+  const creditsBtn = document.getElementById('creditsBtn');
+  if (creditsBtn) {
+    creditsBtn.addEventListener('click', () => {
+      this.playClickSound();
+      // alert('❤️ Made with love by witchhunted');
+    });
   }
 
   // Cursor trail listeners
