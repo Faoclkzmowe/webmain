@@ -153,6 +153,7 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/witchprofile.png', A
 }
 
 #custom-context-menu.visible {
+  display: block;
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
@@ -205,7 +206,7 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/witchprofile.png', A
 }
 </style>
 
-<div id="custom-context-menu" class="animated-border fixed shadow-lg p-1 z-50" style="background: rgba(11,11,16,0.5);; border-radius: 1rem;">
+<div id="custom-context-menu" class="animated-border fixed shadow-lg p-1 z-50" style="display: none; background: rgba(11,11,16,0.5);; border-radius: 1rem;">
   <ul>
     <!-- <li style="border-radius: 1rem;"class="bc px-4 py-2 hover:bg-blue-500 cursor-pointer rounded" onclick="if(window.audioInstance){ window.audioInstance.pause(); window.audioInstance.currentTime = 0; sessionStorage.setItem('isPlaying', 'false'); } location.reload();">⚙️ Refresh</li> -->
     <li id="toggleCursorTrail" style="border-radius: 1rem;" class="bc px-4 py-2 hover:bg--500 cursor-pointer rounded">✔️ Cursortrail</li>

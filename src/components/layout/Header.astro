@@ -140,6 +140,11 @@ declare global {
     }
 
     function showCustomMenu(x, y) {
+      menu.style.display = 'block'; // prevent flash, enable fade
+      requestAnimationFrame(() => {
+        menu.classList.add('visible');
+      });
+
       menu.style.left = `${x}px`;
       menu.style.top = `${y}px`;
 
@@ -152,12 +157,15 @@ declare global {
       if (y + rect.height > innerHeight) {
         menu.style.top = `${innerHeight - rect.height - 10}px`;
       }
-
-      menu.classList.add('visible');
     }
 
     function hideCustomMenu() {
       menu.classList.remove('visible');
+      setTimeout(() => {
+        if (!menu.classList.contains('visible')) {
+          menu.style.display = 'none';
+        }
+      }, 225); // Match transition duration
     }
   }
 
