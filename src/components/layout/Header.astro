@@ -188,10 +188,14 @@ class Header extends HTMLElement {
   trailEnabled = true;
   hitsoundEnabled = true;
 
+  globalClickHandler = (e: MouseEvent) => {
+    this.playClickSound();
+  };
+
   playClickSound() {
     if (!this.hitsoundEnabled) return;
-    const clickSound = new Audio('/audio/click.wav');
-    clickSound.volume = 0.1;
+    const clickSound = new Audio('/audio/click2.wav');
+    clickSound.volume = 0.2;
     clickSound.play();
   }
   
@@ -246,9 +250,11 @@ connectedCallback() {
       this.hitsoundEnabled = !this.hitsoundEnabled;
       localStorage.setItem('hitsoundEnabled', this.hitsoundEnabled.toString());
       hitsoundBtn.textContent = this.hitsoundEnabled ? "✔️ Hitsound" : "❌ Hitsound";
-      this.playClickSound(); // give audio feedback when toggling
+      // this.playClickSound(); // give audio feedback when toggling
     });
   }
+
+  document.addEventListener('click', this.globalClickHandler);
 
   // Theme toggle
   function getCurrentTheme() {
@@ -285,7 +291,6 @@ connectedCallback() {
     }
 
     playBtn.onclick = () => {
-      this.playClickSound(); 
       if (this.audio.paused) {
         this.audio.play();
         playBtn.innerText = '🔇 Pause Music';
@@ -302,7 +307,6 @@ connectedCallback() {
     loopBtn.innerText = this.audio.loop ? '✔️ Loop Music' : '❌ Loop Music';
 
     loopBtn.onclick = () => {
-      this.playClickSound();
       this.audio.loop = !this.audio.loop;
       sessionStorage.setItem('isLooping', this.audio.loop.toString());
       loopBtn.innerText = this.audio.loop ? '✔️ Loop Music' : '❌ Loop Music';
@@ -313,7 +317,6 @@ connectedCallback() {
   const restartBtn = document.getElementById('restartBtn');
   if (restartBtn) {
     restartBtn.addEventListener('click', () => {
-      this.playClickSound();
       if (this.audio) {
         this.audio.currentTime = 0;
       }
@@ -327,7 +330,6 @@ connectedCallback() {
     playbackBtn.innerText = isFast ? '⏩ Double Time' : '▶️ NoMod';
 
     playbackBtn.onclick = () => {
-      this.playClickSound();
       const isCurrentlyFast = this.audio.playbackRate === 1.5;
       this.audio.playbackRate = isCurrentlyFast ? 1 : 1.5;
       playbackBtn.innerText = isCurrentlyFast ? '▶️ NoMod' : '⏩ Double Time';
@@ -338,7 +340,6 @@ connectedCallback() {
   const volumeUpBtn = document.getElementById('volumeUpBtn');
   if (volumeUpBtn) {
     volumeUpBtn.addEventListener('click', () => {
-      this.playClickSound();
       if (this.audio) {
         this.audio.volume = Math.min(this.audio.volume + 0.02, 1); // max 1.0
       }
@@ -348,7 +349,6 @@ connectedCallback() {
   const volumeDownBtn = document.getElementById('volumeDownBtn');
   if (volumeDownBtn) {
     volumeDownBtn.addEventListener('click', () => {
-      this.playClickSound();
       if (this.audio) {
         this.audio.volume = Math.max(this.audio.volume - 0.02, 0); // min 0.0
       }
@@ -359,7 +359,6 @@ connectedCallback() {
   const creditsBtn = document.getElementById('creditsBtn');
   if (creditsBtn) {
     creditsBtn.addEventListener('click', () => {
-      this.playClickSound();
       // alert('❤️ Made with love by witchhunted');
     });
   }
@@ -375,8 +374,10 @@ connectedCallback() {
 }
 
   disconnectedCallback() {
+    
     // Clean up cursor trail listeners
     document.removeEventListener('mousemove', this.mouseMoveHandler);
+    document.removeEventListener('click', this.globalClickHandler);
 
     const toggleItem = document.getElementById('toggleCursorTrail');
     if (toggleItem) {
