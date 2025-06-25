@@ -324,36 +324,37 @@ connectedCallback() {
   }
   
   // Playback Rate Toggle
-  const playbackBtn = document.getElementById('playbackToggleBtn');
-  if (playbackBtn) {
-    const isFast = this.audio.playbackRate === 1.5;
-    playbackBtn.innerText = isFast ? '⏩ Double Time' : '▶️ NoMod';
+  const playbackSpeedSlider = document.getElementById('playbackSpeedSlider') as HTMLInputElement | null;
+  const playbackSpeedLabel = document.getElementById('playbackSpeedLabel');
 
-    playbackBtn.onclick = () => {
-      const isCurrentlyFast = this.audio.playbackRate === 1.5;
-      this.audio.playbackRate = isCurrentlyFast ? 1 : 1.5;
-      playbackBtn.innerText = isCurrentlyFast ? '▶️ NoMod' : '⏩ Double Time';
-    };
+  if (playbackSpeedSlider && playbackSpeedLabel) {
+    // Initialize slider and label from current playbackRate
+    const initialRate = this.audio ? this.audio.playbackRate : 1;
+    playbackSpeedSlider.value = initialRate.toString();
+    playbackSpeedLabel.textContent = initialRate + 'x';
+
+    playbackSpeedSlider.addEventListener('input', () => {
+      const speed = parseFloat(playbackSpeedSlider.value);
+      if (this.audio) {
+        this.audio.playbackRate = speed;
+      }
+      playbackSpeedLabel.textContent = speed.toFixed(2) + 'x';
+    });
   }
 
   // Increase/Decrease Volume
-  const volumeUpBtn = document.getElementById('volumeUpBtn');
-  if (volumeUpBtn) {
-    volumeUpBtn.addEventListener('click', () => {
+  const volumeSlider = document.getElementById('volumeSlider') as HTMLInputElement | null;
+
+  if (volumeSlider) {
+    volumeSlider.value = this.audio ? (this.audio.volume * 100).toString() : "7";
+
+    volumeSlider.addEventListener('input', () => {
       if (this.audio) {
-        this.audio.volume = Math.min(this.audio.volume + 0.02, 1); // max 1.0
+        this.audio.volume = parseInt(volumeSlider.value) / 100;
       }
     });
   }
 
-  const volumeDownBtn = document.getElementById('volumeDownBtn');
-  if (volumeDownBtn) {
-    volumeDownBtn.addEventListener('click', () => {
-      if (this.audio) {
-        this.audio.volume = Math.max(this.audio.volume - 0.02, 0); // min 0.0
-      }
-    });
-  }
 
   // Credit
   const creditsBtn = document.getElementById('creditsBtn');
