@@ -209,14 +209,14 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/witchprofile.png', A
 <div id="custom-context-menu" class="animated-border fixed shadow-lg p-1 z-50" style="display: none; background: rgba(11,11,16,0.5);; border-radius: 1rem;">
   <ul>
     <!-- <li style="border-radius: 1rem;"class="bc px-4 py-2 hover:bg-blue-500 cursor-pointer rounded" onclick="if(window.audioInstance){ window.audioInstance.pause(); window.audioInstance.currentTime = 0; sessionStorage.setItem('isPlaying', 'false'); } location.reload();">⚙️ Refresh</li> -->
-    <li id="toggleCursorTrail" style="border-radius: 1rem;user-select: none;" class="bc px-4 py-2 hover:bg--500 cursor-pointer rounded">✔️ Cursortrail</li>
-    <li id="toggleHitsound" style="border-radius: 1rem;user-select: none;" class="pc px-4 py-2 hover:bg--500 cursor-pointer rounded">❌ Hitsound</li>
+    <li id="toggleCursorTrail" style="border-radius: 1rem;user-select: none;color: white;" class="bc px-4 py-2 hover:bg--500 cursor-pointer rounded">✔️ Cursortrail</li>
+    <li id="toggleHitsound" style="border-radius: 1rem;user-select: none;color: white;" class="pc px-4 py-2 hover:bg--500 cursor-pointer rounded">❌ Hitsound</li>
     <hr style="margin: 10px 19px; border-color: #ccc;" />
-    <li id="playPauseBtn" style="border-radius: 1rem;user-select: none;" class="bc px-4 py-2 hover:bg-blue-500 cursor-pointer rounded">
+    <li id="playPauseBtn" style="border-radius: 1rem;user-select: none;color: white;" class="bc px-4 py-2 hover:bg-blue-500 cursor-pointer rounded">
       🎶 Play Music
     </li>
-    <li id="restartBtn" style="border-radius: 1rem;user-select: none;" class="pc px-4 py-2 hover:bg--500 cursor-pointer rounded">🔄 Restart</li>
-    <li id="loopToggleBtn" style="border-radius: 1rem;user-select: none;" class="bc px-4 py-2 hover:bg-blue-500 cursor-pointer rounded">
+    <li id="restartBtn" style="border-radius: 1rem;user-select: none;color: white;" class="pc px-4 py-2 hover:bg--500 cursor-pointer rounded">🔄 Restart</li>
+    <li id="loopToggleBtn" style="border-radius: 1rem;user-select: none;color: white;" class="bc px-4 py-2 hover:bg-blue-500 cursor-pointer rounded">
       ❌ Loop Music
     </li>
     <li style="border-radius: 1rem; padding: 0.5rem 1rem; color: white;">
@@ -228,6 +228,6 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/witchprofile.png', A
       <input type="range" id="volumeSlider" min="0" max="100" value="50" style="width: 100%;">
     </li>
     <hr style="margin: 10px 19px; border-color: #ccc;" />
-    <li id="creditsBtn" style="border-radius: 1rem;user-select: none;" class="pc px-4 py-2 hover:bg--500 cursor-pointer rounded" draggable="false">❤️ by witchhunted</li>
+    <li id="creditsBtn" style="border-radius: 1rem;user-select: none;color: white;" class="pc px-4 py-2 hover:bg--500 cursor-pointer rounded" draggable="false">❤️ by witchhunted</li>
   </ul>
 </div>
