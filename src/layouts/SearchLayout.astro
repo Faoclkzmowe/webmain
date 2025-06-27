@@ -1,0 +1,39 @@
+---
+import BaseHead from '@/components/BaseHead.astro'
+import Footer from '@/components/layout/Footer.astro'
+import ThemeProvider from '@/components/ThemeProvider.astro'
+import type { SiteMeta } from '@/types'
+import { siteConfig } from '@/site-config'
+
+interface Props {
+  meta: SiteMeta
+  highlightColor?: string
+}
+
+const {
+  meta: { articleDate, description = siteConfig.description, ogImage, title },
+  highlightColor
+} = Astro.props
+---
+
+<html lang={siteConfig.lang}>
+  <head>
+    <BaseHead articleDate={articleDate} description={description} ogImage={ogImage} title={title} />
+  </head>
+
+  <body class='flex justify-center bg-background'>
+    {
+      highlightColor && highlightColor != 'hsl(var(--primary) / var(--tw-text-opacity))' && (
+        <div
+          class='pointer-events-none absolute start-0 top-0 z-0 h-1/2 w-full opacity-25'
+          style={{ backgroundImage: `linear-gradient(${highlightColor}, transparent)` }}
+        />
+      )
+    }
+    <ThemeProvider />
+    <main class='z-10 flex min-h-screen w-screen max-w-[60rem] flex-col items-center px-4 pb-10 text-[0.92rem] leading-relaxed sm:px-7 lg:px-10'>
+      <slot /> <!-- no <Header /> here -->
+      <Footer />
+    </main>
+  </body>
+</html>
