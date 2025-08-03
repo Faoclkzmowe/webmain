@@ -416,7 +416,7 @@ connectedCallback() {
 
   toggleCursorTrail() {
     this.trailEnabled = !this.trailEnabled;
-    localStorage.setItem('Enabled', this.trailEnabled.toString());
+    localStorage.setItem('cursorTrailEnabled', this.trailEnabled.toString());
 
     const toggleItem = document.getElementById('toggleCursorTrail');
     if (toggleItem) {
